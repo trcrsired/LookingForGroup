@@ -1,9 +1,9 @@
 ## Interface: 80200
 ## Author: cqwrteur
 ## Title: LookingForGroup Options
-## Version: @project-version@
 ## SavedVariables: LookingForGroup_OptionsDB
 ## LoadOnDemand: 1
+## X-LFG-MESSAGE: LFG_ChatCommand,LFG_ICON_LEFT_CLICK,LFG_UPDATE_EDITING
 ## X-LFG-DISABLE-PVEFRAME-EVENT: AJ_PVE_LFG_ACTION,AJ_PVP_LFG_ACTION
 ## Dependencies: LookingForGroup
 
@@ -14,8 +14,8 @@
 ..\LookingForGroup_Settings\Libs\AceLocale-3.0\AceLocale-3.0.xml
 #@end-no-lib-strip@
 
-..\LookingForGroup_Settings\options_init.lua
 ..\LookingForGroup_Settings\locale\locale.xml
+..\LookingForGroup_Settings\options_init.lua
 listing.lua
 module.xml
 Core.lua
