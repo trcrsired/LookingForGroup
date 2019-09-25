@@ -8,10 +8,10 @@ externals:
 	Libs/AceEvent-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceEvent-3.0
 	Libs/AceDB-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceDB-3.0
 	Hook/Libs/AceHook-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceHook-3.0
-	Options/Libs/AceConfig-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceConfig-3.0
-	Options/Libs/AceGUI-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceGUI-3.0
-	Options/Libs/AceLocale-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceLocale-3.0
-	Options/Libs/AceDBOptions-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceDBOptions-3.0
+	Settings/Libs/AceConfig-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceConfig-3.0
+	Settings/Libs/AceGUI-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceGUI-3.0
+	Settings/Libs/AceLocale-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceLocale-3.0
+	Settings/Libs/AceDBOptions-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceDBOptions-3.0
 	Broker/Libs/LibDataBroker-1.1: https://repos.wowace.com/wow/libdbicon-1-0/trunk/LibDataBroker-1.1
 	Icon/Libs/LibDBIcon-1.0: https://repos.wowace.com/wow/libdbicon-1-0/trunk/LibDBIcon-1.0
 	CRE: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-cross-realm-enhancement
@@ -20,22 +20,20 @@ externals:
 	LFDLFR: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-lfd-lfr
 	QJ: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-quick-join
 	Solo: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-solo
+	shared: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-shared
+	crshared: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-crshared
 
 move-folders:
 	LookingForGroup/Options: LookingForGroup_Options
 	LookingForGroup/Settings: LookingForGroup_Settings
 	LookingForGroup/Hook: LookingForGroup_Hook
-	LookingForGroup/Auto: LookingForGroup_Auto
-	LookingForGroup/SF: LookingForGroup_SF
-	LookingForGroup/Event: LookingForGroup_Event
 	LookingForGroup/Broker: LookingForGroup_Broker
 	LookingForGroup/Icon: LookingForGroup_Icon
-	LookingForGroup/Bindings: LookingForGroup_Bindings
-	LookingForGroup/Q: LookingForGroup_Q
-	LookingForGroup/CR: LookingForGroup_CR
 	LookingForGroup/CRE: LookingForGroup_CRE
 	LookingForGroup/M+: LookingForGroup_M+
 	LookingForGroup/PVP: LookingForGroup_PVP
 	LookingForGroup/LFDLFR: LookingForGroup_LFDLFR
 	LookingForGroup/QJ: LookingForGroup_QJ
 	LookingForGroup/Solo: LookingForGroup_Solo
+	LookingForGroup/shared: ./
+	LookingForGroup/crshared: ./

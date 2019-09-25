@@ -1,11 +1,9 @@
 ## Interface: 80200
 ## Author: cqwrteur
 ## Title: LookingForGroup Settings
-## Version: @project-version@
 ## LoadOnDemand: 1
-## Dependencies: LookingForGroup
-## OptionalDeps: LookingForGroup_Options
-## X-LFG-MESSAGE: LFG_ChatCommand,LFG_ICON_LEFT_CLICK
+## Dependencies: LookingForGroup_Options
+## X-LFG-MESSAGE: LFG_ChatCommand,LFG_ICON_LEFT_CLICK,LFG_UPDATE_EDITING
 ## X-LFG-EM-HOSTER: LookingForGroup_Options
 
 locale\locale.xml
