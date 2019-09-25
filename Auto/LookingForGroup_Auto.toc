@@ -1,0 +1,8 @@
+## Interface: 80200
+## Author: cqwrteur
+## Title: LookingForGroup Auto
+## Version: @project-version@
+## LoadOnDemand: 1
+## Dependencies: LookingForGroup
+
+Core.lua

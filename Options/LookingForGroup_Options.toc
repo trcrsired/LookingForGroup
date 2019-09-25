@@ -1,0 +1,21 @@
+## Interface: 80200
+## Author: cqwrteur
+## Title: LookingForGroup Options
+## Version: @project-version@
+## SavedVariables: LookingForGroup_OptionsDB
+## LoadOnDemand: 1
+## X-LFG-DISABLE-PVEFRAME-EVENT: AJ_PVE_LFG_ACTION,AJ_PVP_LFG_ACTION
+## X-LFG-DISABLE-PVEFRAME-MESSAGE: LFG_UPDATE_EDITING
+## X-LFG-MESSAGE: LFG_ChatCommand,LFG_ICON_LEFT_CLICK
+## Dependencies: LookingForGroup
+
+#@no-lib-strip@
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+#@end-no-lib-strip@
+
+Init.lua
+module.xml
+Core.lua

@@ -1,0 +1,8 @@
+## Interface: 80200
+## Author: cqwrteur
+## Title: LookingForGroup Quest
+## Version: @project-version@
+## LoadOnDemand: 1
+## X-LFG-EVENT: QUEST_ACCEPTED
+
+Core.lua

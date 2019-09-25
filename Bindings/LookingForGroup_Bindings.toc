@@ -1,0 +1,7 @@
+## Interface: 80200
+## Author: cqwrteur
+## Title: LookingForGroup Bindings
+## Version: @project-version@
+## Dependencies: LookingForGroup
+
+Core.lua
