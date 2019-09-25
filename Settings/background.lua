@@ -1,6 +1,3 @@
-if not LibStub("AceAddon-3.0"):GetAddon("LookingForGroup").disable_pve_frame then
-	return
-end
 local LookingForGroup_Options = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup_Options")
 local L = LibStub("AceLocale-3.0"):GetLocale("LookingForGroup")
 
