@@ -127,16 +127,6 @@ end,function(profile)
 	return profile.s.fake_minimum_item_level
 end)
 
-LookingForGroup_Options.Register("category_callbacks",nil,function()
-	local st = LibStub("AceConfigDialog-3.0"):GetStatusTable("LookingForGroup")
-	local db = LookingForGroup_Options.db
-	local profile = db.profile
-	local default = db.defaults.profile
-	st.height,st.width = profile.window_height or default.window_height,profile.window_width or default.window_width
-	st.left,st.top = profile.window_left,profile.window_top
-end)
-
-
 LookingForGroup_Options.RegisterSimpleFilter("spam",function(info)
 	local numMembers = info.numMembers
 	if numMembers < 2 then
@@ -232,9 +222,6 @@ LookingForGroup_Options.RegisterSimpleFilter("spam",function(info)
 		return 2
 	end
 end,function(profile) return not profile.spam_filter_ages end)
-
-
-
 
 LookingForGroup_Options.RegisterSimpleFilter("spam",function(info)
 	if info == nil or info.isDelisted then

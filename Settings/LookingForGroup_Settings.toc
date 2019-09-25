@@ -3,8 +3,12 @@
 ## Title: LookingForGroup Settings
 ## Version: @project-version@
 ## LoadOnDemand: 1
-## Dependencies: LookingForGroup_Options
+## Dependencies: LookingForGroup
+## OptionalDeps: LookingForGroup_Options
+## X-LFG-MESSAGE: LFG_ChatCommand,LFG_ICON_LEFT_CLICK
+## X-LFG-EM-HOSTER: LookingForGroup_Options
 
+locale\locale.xml
 settings.lua
 auto.lua
 background.lua

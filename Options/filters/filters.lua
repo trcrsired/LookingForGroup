@@ -2,24 +2,6 @@ local LookingForGroup = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup")
 local LookingForGroup_Options = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup_Options")
 LookingForGroup_Options.applicant_filters = {}
 
-function LookingForGroup_Options.Register(table_name,filtername,func)
-	local tbl = LookingForGroup_Options[table_name]
-	if tbl == nil then
-		tbl = {}
-	end
-	if filtername then
-		local tblf = tbl[filtername]
-		if tblf == nil then
-			tbl[filtername] = {func}
-		else
-			tblf[#tblf+1] = func
-		end
-	else
-		tbl[#tbl+1] = func
-	end
-	LookingForGroup_Options[table_name] = tbl
-end
-
 function LookingForGroup_Options.RegisterFilter(...)
 	LookingForGroup_Options.Register("filters",...)
 end

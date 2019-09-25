@@ -10,12 +10,14 @@
 ## Dependencies: LookingForGroup
 
 #@no-lib-strip@
-Libs\AceGUI-3.0\AceGUI-3.0.xml
-Libs\AceConfig-3.0\AceConfig-3.0.xml
-Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
-Libs\AceLocale-3.0\AceLocale-3.0.xml
+..\LookingForGroup_Settings\Libs\AceGUI-3.0\AceGUI-3.0.xml
+..\LookingForGroup_Settings\Libs\AceConfig-3.0\AceConfig-3.0.xml
+..\LookingForGroup_Settings\Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+..\LookingForGroup_Settings\Libs\AceLocale-3.0\AceLocale-3.0.xml
 #@end-no-lib-strip@
 
-Init.lua
+..\LookingForGroup_Settings\options_init.lua
+..\LookingForGroup_Settings\locale\locale.xml
+listing.lua
 module.xml
 Core.lua
