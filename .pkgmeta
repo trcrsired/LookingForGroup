@@ -21,7 +21,7 @@ externals:
 	QJ: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-quick-join
 	Solo: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-solo
 	shared: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-shared
-	crshared: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-crshared
+	crshared: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-cr-shared
 
 move-folders:
 	LookingForGroup/Options: LookingForGroup_Options
