@@ -29,24 +29,30 @@ function LookingForGroup_Options:OnEnable()
 		coroutine.wrap(self.req_main)()
 	end
 	self:OnProfileChanged()
-	self.option_table.args.settings=
-	{
-		name = SETTINGS,
-		type = "group",
-		args =
+	if LookingForGroup.disable_pve_frame then
+		self.option_table.args.settings=
 		{
-			enable =
+			name = SETTINGS,
+			type = "group",
+			args =
 			{
-				name = ENABLE,
-				type = "execute",
-				func = function()
-					LoadAddOn("LookingForGroup_Settings")
-					collectgarbage("collect")
-					LookingForGroup_Options:SendMessage("LFG_SETTINGS_ENABLED")
-				end
+				enable =
+				{
+					name = ENABLE,
+					type = "execute",
+					func = function()
+						LoadAddOn("LookingForGroup_Settings")
+						collectgarbage("collect")
+						LookingForGroup_Options:SendMessage("LFG_SETTINGS_ENABLED")
+					end
+				}
 			}
 		}
-	}
+	else
+		LoadAddOn("LookingForGroup_Settings")
+		collectgarbage("collect")
+		LookingForGroup_Options:SendMessage("LFG_SETTINGS_ENABLED")
+	end
 	self.OnEnable = nil
 	self.OnInitialize = nil
 end

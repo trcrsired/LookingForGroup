@@ -7,7 +7,7 @@
 	<Script file="filters\filters.lua"/>
 	<Script file="filters\internal.lua"/>
 	<Script file="search_results\signup.lua"/>
-	<Script file="languages\languages.lua"/>
+	<Script file="languages.lua"/>
 	<Script file="role\role.lua"/>
 	<Script file="find\find.lua"/>
 	<Script file="encounters\encounters.lua"/>
