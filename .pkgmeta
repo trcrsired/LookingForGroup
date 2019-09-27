@@ -26,6 +26,7 @@ externals:
 	core: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup_core
 
 move-folders:
+	LookingForGroup/Options: LookingForGroup_Options
 	LookingForGroup/Settings: LookingForGroup_Settings
 	LookingForGroup/Hook: LookingForGroup_Hook
 	LookingForGroup/Broker: LookingForGroup_Broker
