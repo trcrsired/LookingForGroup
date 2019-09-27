@@ -22,6 +22,8 @@ externals:
 	Solo: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-solo
 	shared: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-shared
 	crshared: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-cr-shared
+	broker_core: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-broker_core
+	core: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup_core
 
 move-folders:
 	LookingForGroup/Settings: LookingForGroup_Settings
@@ -36,3 +38,5 @@ move-folders:
 	LookingForGroup/Solo: LookingForGroup_Solo
 	LookingForGroup/shared: ./
 	LookingForGroup/crshared: ./
+	LookingForGroup/broker_core: ./
+	LookingForGroup/core: ./
