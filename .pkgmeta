@@ -25,6 +25,7 @@ externals:
 	crshared: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-cr-shared
 	broker_core: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-broker_core
 	core: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup_core
+	Elite: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-elite
 
 move-folders:
 	LookingForGroup/Options: LookingForGroup_Options
@@ -39,6 +40,7 @@ move-folders:
 	LookingForGroup/LFDLFR: LookingForGroup_LFDLFR
 	LookingForGroup/QJ: LookingForGroup_QJ
 	LookingForGroup/Solo: LookingForGroup_Solo
+	LookingForGroup/Elite: LookingForGroup_Elite
 	LookingForGroup/shared: ./
 	LookingForGroup/crshared: ./
 	LookingForGroup/broker_core: ./
