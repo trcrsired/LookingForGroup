@@ -26,9 +26,9 @@ externals:
 	broker_core: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-broker_core
 	core: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup_core
 	Elite: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-elite
-	Flags_US: https://github.com/trcrsired/LookingForGroup-Flags/tree/main/us
-	Flags_EU: https://github.com/trcrsired/LookingForGroup-Flags/tree/main/eu
-	Flags_CN: https://github.com/trcrsired/LookingForGroup-Flags/tree/main/cn
+	Flags_US: https://github.com/trcrsired/LookingForGroup_Flags_US
+	Flags_EU: https://github.com/trcrsired/LookingForGroup_Flags_EU
+	Flags_CN: https://github.com/trcrsired/LookingForGroup_Flags_CN
 
 move-folders:
 	LookingForGroup/Options: LookingForGroup_Options
