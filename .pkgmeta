@@ -48,3 +48,6 @@ move-folders:
 	LookingForGroup/crshared: ./
 	LookingForGroup/broker_core: ./
 	LookingForGroup/core: ./
+	LookingForGroup/Flags_US: LookingForGroup_Flags_US
+	LookingForGroup/Flags_EU: LookingForGroup_Flags_EU
+	LookingForGroup/Flags_CN: LookingForGroup_Flags_CN
