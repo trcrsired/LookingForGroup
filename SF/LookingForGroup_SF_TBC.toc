@@ -1,0 +1,6 @@
+## Interface: 20504
+## Author: cqwrteur
+## Title: LookingForGroup Spam Filter
+## Dependencies: LookingForGroup
+
+Core.lua

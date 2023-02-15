@@ -1,0 +1,9 @@
+## Interface: 20504
+## Author: cqwrteur
+## Title: LookingForGroup M+
+## Dependencies: LookingForGroup_Options
+## LoadOnDemand: 1
+## X-LFG-OPT: 0
+
+m+.lua
+group.lua

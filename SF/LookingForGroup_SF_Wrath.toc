@@ -1,0 +1,6 @@
+## Interface: 30401
+## Author: cqwrteur
+## Title: LookingForGroup Spam Filter
+## Dependencies: LookingForGroup
+
+Core.lua

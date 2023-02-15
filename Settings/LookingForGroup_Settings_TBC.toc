@@ -1,0 +1,13 @@
+## Interface: 20504
+## Author: cqwrteur
+## Title: LookingForGroup Settings
+## LoadOnDemand: 1
+## Dependencies: LookingForGroup_Options
+
+settings.lua
+auto.lua
+background.lua
+rf.lua
+sf.lua
+sort.lua
+flags.lua

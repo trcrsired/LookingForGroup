@@ -1,0 +1,6 @@
+## Interface: 30401
+## Author: cqwrteur
+## Title: LookingForGroup Event
+## Dependencies: LookingForGroup
+
+Core.lua
