@@ -1,0 +1,7 @@
+## Interface: 100005
+## Author: cqwrteur
+## Title: LookingForGroup Elite
+## LoadOnDemand: 1
+## X-LFG-EVENT: 0
+
+Core.lua

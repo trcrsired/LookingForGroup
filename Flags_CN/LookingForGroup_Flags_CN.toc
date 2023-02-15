@@ -1,0 +1,9 @@
+## Interface: 100005
+## Author: cqwrteur
+## Title: LookingForGroup Flags CN
+## Version: @project-version@
+## Dependencies: LookingForGroup
+## LoadOnDemand: 1
+## X-LFG-REGION: 5
+
+Core.lua

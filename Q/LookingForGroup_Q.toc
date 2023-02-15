@@ -1,0 +1,7 @@
+## Interface: 100005
+## Author: cqwrteur
+## Title: LookingForGroup Quest
+## LoadOnDemand: 1
+## X-LFG-EVENT: QUEST_ACCEPTED
+
+Core.lua

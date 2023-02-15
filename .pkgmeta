@@ -14,21 +14,6 @@ externals:
 	Settings/Libs/AceDBOptions-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceDBOptions-3.0
 	Broker/Libs/LibDataBroker-1.1: https://repos.wowace.com/wow/libdbicon-1-0/trunk/LibDataBroker-1.1
 	Icon/Libs/LibDBIcon-1.0: https://repos.wowace.com/wow/libdbicon-1-0/trunk/LibDBIcon-1.0
-	CR: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-cr
-	CRE: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-cross-realm-enhancement
-	M+: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-m
-	PVP: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-pvp
-	LFDLFR: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-lfd-lfr
-	QJ: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-quick-join
-	Solo: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-solo
-	shared: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-shared
-	crshared: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-cr-shared
-	broker_core: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-broker_core
-	core: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup_core
-	Elite: https://bitbucket.org/ejsvifq_mabmip/lookingforgroup-elite
-	Flags_US: https://github.com/trcrsired/LookingForGroup_Flags_US
-	Flags_EU: https://github.com/trcrsired/LookingForGroup_Flags_EU
-	Flags_CN: https://github.com/trcrsired/LookingForGroup_Flags_CN
 
 move-folders:
 	LookingForGroup/Options: LookingForGroup_Options

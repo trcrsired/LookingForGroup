@@ -1,0 +1,6 @@
+## Interface: 100005
+## Author: cqwrteur
+## Title: LookingForGroup Bindings
+## Dependencies: LookingForGroup
+
+Core.lua
