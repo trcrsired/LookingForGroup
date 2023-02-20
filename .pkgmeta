@@ -26,6 +26,7 @@ move-folders:
 	LookingForGroup/M+: LookingForGroup_M+
 	LookingForGroup/PVP: LookingForGroup_PVP
 	LookingForGroup/LFDLFR: LookingForGroup_LFDLFR
+	LookingForGroup/Q: LookingForGroup_Q
 	LookingForGroup/QJ: LookingForGroup_QJ
 	LookingForGroup/Solo: LookingForGroup_Solo
 	LookingForGroup/Elite: LookingForGroup_Elite
