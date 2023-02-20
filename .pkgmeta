@@ -26,6 +26,10 @@ move-folders:
 	LookingForGroup/M+: LookingForGroup_M+
 	LookingForGroup/PVP: LookingForGroup_PVP
 	LookingForGroup/LFDLFR: LookingForGroup_LFDLFR
+	LookingForGroup/SF: LookingForGroup_SF
+	LookingForGroup/Bindings: LookingForGroup_Bindings
+	LookingForGroup/Auto: LookingForGroup_Auto
+	LookingForGroup/Events: LookingForGroup_Events
 	LookingForGroup/Q: LookingForGroup_Q
 	LookingForGroup/QJ: LookingForGroup_QJ
 	LookingForGroup/Solo: LookingForGroup_Solo
