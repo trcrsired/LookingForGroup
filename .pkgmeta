@@ -29,7 +29,7 @@ move-folders:
 	LookingForGroup/SF: LookingForGroup_SF
 	LookingForGroup/Bindings: LookingForGroup_Bindings
 	LookingForGroup/Auto: LookingForGroup_Auto
-	LookingForGroup/Events: LookingForGroup_Events
+	LookingForGroup/Event: LookingForGroup_Event
 	LookingForGroup/Q: LookingForGroup_Q
 	LookingForGroup/QJ: LookingForGroup_QJ
 	LookingForGroup/Solo: LookingForGroup_Solo
