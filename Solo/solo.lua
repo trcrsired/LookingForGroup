@@ -24,7 +24,9 @@ function LookingForGroup_Options.hardware_solo_create(instance_leave)
 	C_LFGList.CreateListing(457,GetAverageItemLevel()-10,0,false,true)
 	coroutine.wrap(LookingForGroup_Options.req_main)(1)
 	if instance_leave then
-		C_Timer.After(1,C_PartyInfo.LeaveParty)
+		C_Timer.After(1,function()
+			C_PartyInfo.LeaveParty()
+		end)
 	else
 		if LookingForGroup_Options.db.profile.solo_convert_to_raid then
 			C_Timer.After(1,C_PartyInfo.ConvertToRaid)
