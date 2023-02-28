@@ -192,6 +192,14 @@ LookingForGroup_Options:push("find",{
 				a.activities = activities
 				local activity_infotb = C_LFGList.GetActivityInfoTable(activity_id)
 				local categoryID, groupID, filters = activity_infotb.categoryID,activity_infotb.groupFinderActivityGroupID,activity_infotb.filters
+				local LE_LFG_LIST_FILTER_RECOMMENDED = LE_LFG_LIST_FILTER_RECOMMENDED
+				if LE_LFG_LIST_FILTER_RECOMMENDED == nil then
+					LE_LFG_LIST_FILTER_RECOMMENDED = Enum.LFGListFilter.Recommended
+				end
+				local LE_LFG_LIST_FILTER_NOT_RECOMMENDED = LE_LFG_LIST_FILTER_NOT_RECOMMENDED
+				if LE_LFG_LIST_FILTER_NOT_RECOMMENDED == nil then
+					LE_LFG_LIST_FILTER_NOT_RECOMMENDED = Enum.LFGListFilter.NotRecommended
+				end
 				if bit.band(filters,LE_LFG_LIST_FILTER_RECOMMENDED) == 1 then
 					profile.recommended = nil
 				elseif bit.band(filters,LE_LFG_LIST_FILTER_NOT_RECOMMENDED) == 1 then
