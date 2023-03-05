@@ -502,7 +502,11 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 		LookingForGroup.resume(current,...)
 	end
 	Auto:UnregisterEvent("GROUP_ROSTER_UPDATE")
-	Auto:RegisterEvent("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS",event_func)
+
+	local lfg_enabled = C_LFGList.IsLookingForGroupEnabled()
+	if lfg_enabled then
+		Auto:RegisterEvent("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS",event_func)
+	end
 	local ticker
 	local function initialize_kicker()
 		if ticker then
@@ -517,13 +521,13 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 	initialize_kicker()
 	Auto:RegisterEvent("GROUP_LEFT",event_func)
 	local Event = LookingForGroup:GetModule("Event")
-	Event:UnregisterEvent("LFG_LIST_APPLICANT_UPDATED")
+	if lfg_enabled then
+		Event:UnregisterEvent("LFG_LIST_APPLICANT_UPDATED")
+	end
 	LookingForGroup.disable_pve_frame()
 	local player_list
-	local original_tp = ty_pe
 	local invited_tb = {}
 	local has_set_friends
-	local lfg_enabled = C_LFGList.IsLookingForGroupEnabled()
 	if not profile.auto_addons_wqt and in_range then
 		Auto:RegisterEvent("CHAT_MSG_SYSTEM",event_func)
 		UIParent:UnregisterEvent("GROUP_INVITE_CONFIRMATION")
@@ -537,7 +541,7 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 			if InCombatLockdown() then
 				Auto:RegisterEvent("PLAYER_REGEN_ENABLED",callback)
 			else
-				callback()				
+				callback()			
 			end
 		end
 		Auto:RegisterEvent("NAME_PLATE_UNIT_ADDED",event_func,18)
@@ -634,7 +638,7 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 			break
 		elseif k == 0 or k == 1 then
 			local hardware = profile.hardware
-			if not hardware then
+			if not hardware and lfg_enabled then
 				local CancelApplication = C_LFGList.CancelApplication
 				local DeclineInvite = C_LFGList.DeclineInvite
 				local GetApplicationInfo = C_LFGList.GetApplicationInfo
@@ -654,13 +658,17 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 				C_PartyInfo.LeaveParty()
 				break
 			elseif k == 0 and gpl and not hardware then
-				C_LFGList.RemoveListing()
+				if lfg_enabled then
+					C_LFGList.RemoveListing()
+				end
 			else
 				local tb = {nop,ACCEPT,C_PartyInfo.LeaveParty}
 				if C_LFGList.HasActiveEntryInfo() and UnitIsGroupLeader("player") then
 					tb[#tb+1]=UNLIST_MY_GROUP
 					tb[#tb+1]=function()
-						C_LFGList.RemoveListing()
+						if lfg_enabled then
+							C_LFGList.RemoveListing()
+						end
 						event_func("GROUP_LEFT")
 					end
 				end
@@ -894,7 +902,7 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 	if not not_hide_popup and LookingForGroup.popup then
 		LookingForGroup.popup:Hide()
 	end
-	if LookingForGroup.disable_pve_frame == nop then
+	if LookingForGroup.disable_pve_frame == nop and lfg_enabled then
 		Event:RegisterEvent("LFG_LIST_APPLICANT_UPDATED")
 	end
 	LookingForGroup.auto_is_running = nil

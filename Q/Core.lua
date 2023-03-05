@@ -50,75 +50,100 @@ local function cofunc(quest_id,secure,gp)
 		if secure <= 0 and LookingForGroup.db.profile.auto_no_info_quest then
 			return
 		end
+
 		local GetInfo = C_QuestLog.GetInfo
-		for i=1,C_QuestLog.GetNumQuestLogEntries() do
-			local tb=GetInfo(i)
-			if GetInfo(i).questID == quest_id then
-				if secure <= 0 and frequency == LE_QUEST_FREQUENCY_WEEKLY then
-					return
+		if GetInfo then
+			for i=1,C_QuestLog.GetNumQuestLogEntries() do
+				local tb=GetInfo(i)
+				if GetInfo(i).questID == quest_id then
+					if secure <= 0 and tb.frequency == 3 then
+						return
+					end
+					questName = tb.title
+					break
 				end
-				questName = tb.title
-				break
 			end
-		end
-	end
-	if questName == nil then return end
-	local activityID = C_LFGList.GetActivityIDForQuestID(quest_id)
-	if activityID  == nil then
-		local activities = C_LFGList.GetAvailableActivities()
-		local C_LFGList_GetActivityInfoExpensive = C_LFGList.GetActivityInfoExpensive
-		for i=1,#activities do
-			if C_LFGList_GetActivityInfoExpensive(activities[i]) then
-				activityID = activities[i]
-				break
-			end
-		end
-		if activityID == nil then
-			activityID = 280 --use wandering isle activity since no one will use it unless you are a level capped neutral pandaren like me
-		end
-	end
-	local activity_infotb = C_LFGList.GetActivityInfoTable(activityID)
-	local categoryID, iLevel, filters = activity_infotb.categoryID,activity_infotb.ilvlSuggestion,activity_infotb.filters
-	local confirm_keyword = not C_LFGList.CanCreateQuestGroup(quest_id) and tostring(quest_id) or nil
-	local function create()
-		local ilvl = 0
-		if confirm_keyword then
-			if math.floor(ilvl) == ilvl then
-				ilvl = ilvl + 0.125
-			end
-			C_LFGList.CreateListing(activityID,ilvl,0,true,false)
 		else
-			C_LFGList.ClearCreationTextFields()
-			C_LFGList.CreateListing(activityID,ilvl,0,true,false,quest_id)
+			for i=1,GetNumQuestLogEntries() do
+				local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isBounty, isStory, isHidden, isScaling = GetQuestLogTitle(i)
+				if questID == quest_id then
+					if secure <= 0 and frequency == 3 then
+						return
+					end
+					questName = title
+					break
+				end
+			end
 		end
 	end
-	local function search()
-		if not confirm_keyword then
-			C_LFGList.SetSearchToQuestID(quest_id)
-		end
-		return LookingForGroup.Search(categoryID,filters,0)
+	if questName == nil then
+		questName = ("QuestID:%d"):format(quest_id)
 	end
-	LookingForGroup_Q:RegisterEvent("QUEST_REMOVED",function(info,id)
+	local function func(info,id)
 		if quest_id == id and LookingForGroup.popup and LookingForGroup.popup:IsShown() then
 			LookingForGroup.popup:Hide()
 		end
-	end)
-	local raid
-	local tb = C_QuestLog.GetQuestTagInfo(quest_id)
-	if tb then
-		raid = tb.quality == 2
 	end
 	if not gp and IsInGroup() then
-		if 0 < secure and UnitIsGroupLeader("player", LE_PARTY_CATEGORY_HOME) then
+		if 0 < secure and UnitIsGroupLeader("player", 1) then
 			gp = true
 		else
 			return
 		end
 	end
-	local current = coroutine.running()
-	if LookingForGroup.accepted(questName,search,create,secure,raid,confirm_keyword,"<LFG>Q",gp) then
-		return
+	if C_LFGList.IsLookingForGroupEnabled() then
+		local activityID = C_LFGList.GetActivityIDForQuestID(quest_id)
+		if activityID  == nil then
+			local activities = C_LFGList.GetAvailableActivities()
+			local C_LFGList_GetActivityInfoExpensive = C_LFGList.GetActivityInfoExpensive
+			for i=1,#activities do
+				if C_LFGList_GetActivityInfoExpensive(activities[i]) then
+					activityID = activities[i]
+					break
+				end
+			end
+			if activityID == nil then
+				activityID = 280 --use wandering isle activity since no one will use it unless you are a level capped neutral pandaren like me
+			end
+		end
+
+		local activity_infotb = C_LFGList.GetActivityInfoTable(activityID)
+		local categoryID, iLevel, filters = activity_infotb.categoryID,activity_infotb.ilvlSuggestion,activity_infotb.filters
+		local confirm_keyword = not C_LFGList.CanCreateQuestGroup(quest_id) and tostring(quest_id) or nil
+		local function create()
+			local ilvl = 0
+			if confirm_keyword then
+				if math.floor(ilvl) == ilvl then
+					ilvl = ilvl + 0.125
+				end
+				C_LFGList.CreateListing(activityID,ilvl,0,true,false)
+			else
+				C_LFGList.ClearCreationTextFields()
+				C_LFGList.CreateListing(activityID,ilvl,0,true,false,quest_id)
+			end
+		end
+		local function search()
+			if not confirm_keyword then
+				C_LFGList.SetSearchToQuestID(quest_id)
+			end
+			return LookingForGroup.Search(categoryID,filters,0)
+		end
+		local tb = C_QuestLog.GetQuestTagInfo(quest_id)
+		if tb then
+			raid = tb.quality == 2
+		end
+		LookingForGroup_Q:RegisterEvent("QUEST_REMOVED",func)
+		if LookingForGroup.accepted(questName,search,create,secure,raid,confirm_keyword,"<LFG>Q",gp) then
+			return
+		end
+	else
+		LookingForGroup_Q:RegisterEvent("QUEST_REMOVED",func)
+		if LookingForGroup.accepted(questName,nil,nop,secure,false,confirm_keyword,"<LFG>Q",gp) then
+			return
+		end
 	end
+
+	local current = coroutine.running()
 	LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED",function(event,id)
 		if IsInGroup() then
 			if quest_id == id then
@@ -140,8 +165,12 @@ local function cofunc(quest_id,secure,gp)
 		end
 	end)
 	LookingForGroup.autoloop(questName,create,raid,confirm_keyword,"<LFG>Q",function()
-		local distance = C_TaskQuest.GetDistanceSqToQuest(quest_id)
-		return not distance or distance < 40000
+		if C_TaskQuest.GetDistanceSqToQuest then
+			local distance = C_TaskQuest.GetDistanceSqToQuest(quest_id)
+			return not distance or distance < 40000
+		else
+			return true
+		end
 	end)
 	LookingForGroup_Q:UnregisterEvent("QUEST_TURNED_IN")
 	LookingForGroup_Q:UnregisterEvent("QUEST_REMOVED")
@@ -175,7 +204,10 @@ local function is_group_q(id,ignore)
 	end
 	local GetQuestTagInfo = C_QuestLog.GetQuestTagInfo
 	if GetQuestTagInfo == nil then
-		return
+		if profile.auto_wq_only then
+			return
+		end
+		return true
 	end
 	local quest_tb = C_QuestLog.GetQuestTagInfo(id)
 	if quest_tb == nil then
