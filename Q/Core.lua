@@ -42,6 +42,9 @@ end
 function LookingForGroup_Q:OnEnable()
 	LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED")
 	LookingForGroup_Q:RegisterMessage("LFG_SECURE_QUEST_ACCEPTED")
+	if not C_LFGList.IsLookingForGroupEnabled() then
+		LookingForGroup_Q:RegisterEvent("QUEST_LOG_UPDATE")
+	end
 end
 
 local function cofunc(quest_id,secure,gp)
@@ -91,6 +94,9 @@ local function cofunc(quest_id,secure,gp)
 			return
 		end
 	end
+	local create, search
+	local confirm_keyword
+	local raid
 	if C_LFGList.IsLookingForGroupEnabled() then
 		local activityID = C_LFGList.GetActivityIDForQuestID(quest_id)
 		if activityID  == nil then
@@ -109,8 +115,8 @@ local function cofunc(quest_id,secure,gp)
 
 		local activity_infotb = C_LFGList.GetActivityInfoTable(activityID)
 		local categoryID, iLevel, filters = activity_infotb.categoryID,activity_infotb.ilvlSuggestion,activity_infotb.filters
-		local confirm_keyword = not C_LFGList.CanCreateQuestGroup(quest_id) and tostring(quest_id) or nil
-		local function create()
+		confirm_keyword = not C_LFGList.CanCreateQuestGroup(quest_id) and tostring(quest_id) or nil
+		create= function()
 			local ilvl = 0
 			if confirm_keyword then
 				if math.floor(ilvl) == ilvl then
@@ -122,7 +128,7 @@ local function cofunc(quest_id,secure,gp)
 				C_LFGList.CreateListing(activityID,ilvl,0,true,false,quest_id)
 			end
 		end
-		local function search()
+		search = function()
 			if not confirm_keyword then
 				C_LFGList.SetSearchToQuestID(quest_id)
 			end
@@ -132,17 +138,16 @@ local function cofunc(quest_id,secure,gp)
 		if tb then
 			raid = tb.quality == 2
 		end
-		LookingForGroup_Q:RegisterEvent("QUEST_REMOVED",func)
-		if LookingForGroup.accepted(questName,search,create,secure,raid,confirm_keyword,"<LFG>Q",gp) then
-			return
-		end
 	else
-		LookingForGroup_Q:RegisterEvent("QUEST_REMOVED",func)
-		if LookingForGroup.accepted(questName,nil,nop,secure,false,confirm_keyword,"<LFG>Q",gp) then
-			return
-		end
+		raid = false
+		confirm_keyword = tostring(quest_id)
+		create = nop
 	end
 
+	LookingForGroup_Q:RegisterEvent("QUEST_REMOVED",func)
+	if LookingForGroup.accepted(questName,search,create,secure,raid,confirm_keyword,"<LFG>Q",gp) then
+		return
+	end
 	local current = coroutine.running()
 	LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED",function(event,id)
 		if IsInGroup() then
@@ -254,13 +259,35 @@ local function is_group_q(id,ignore)
 	return true
 end
 
-function LookingForGroup_Q:QUEST_ACCEPTED(_,quest_id)
+function LookingForGroup_Q:QUEST_ACCEPTED(event,quest_id)
 	local load_time = LookingForGroup.load_time
 	if load_time == nil or GetTime() < load_time + 5 then
 		return
 	end
 	if is_group_q(quest_id) then
 		coroutine.wrap(cofunc)(quest_id,0)
+	end
+end
+
+local function questlogcoro()
+	if LookingForGroup.accepted(UNKNOWN,nil,nop,0,false,UNKNOWN,"<LFG>QUNKNOWN") then
+		return
+	end
+	LookingForGroup.autoloop(UNKNOWN,nop,false,"<LFG>QUNKNOWN","<LFG>QUNKNOWN",function()
+		return true
+	end)
+end
+
+function LookingForGroup_Q:QUEST_LOG_UPDATE()
+	local load_time = LookingForGroup.load_time
+	if load_time == nil or GetTime() < load_time + 5 then
+		return
+	end
+	if C_LFGList.IsLookingForGroupEnabled() then
+		self:UnregisterEvent("QUEST_LOG_UPDATE")
+	end
+	if LookingForGroup.auto_is_running == nil then
+		coroutine.wrap(questlogcoro)()
 	end
 end
 
