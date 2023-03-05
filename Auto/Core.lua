@@ -704,7 +704,10 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 					tn = tn + C_LFGList.GetNumInvitedApplicantMembers() 
 				end
 				local maxn = q and 40 or 4
-				local InviteUnit = C_PartyInfo.InviteUnit
+				local InviteUnit = InviteUnit
+				if InviteUnit == nil then
+					InviteUnit = C_PartyInfo.InviteUnit				
+				end
 				if tn < maxn  then
 					local name,server = UnitName(arg3)
 					if name and server then
@@ -742,6 +745,10 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 			local m = min((q and 40 or 5),n)
 			local n = GetNumGroupMembers()
 			local require_kick
+			local UninviteUnit = UninviteUnit
+			if UninviteUnit == nil then
+				UninviteUnit = C_PartyInfo.UninviteUnit
+			end
 			repeat
 			local u = UnitInRaid("player") and "raid" or "party"
 			for i=1,(u=="party" and m-1 or m) do
@@ -780,7 +787,11 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 		elseif k == "CHAT_MSG_WHISPER" then
 			if remain_group_spaces()~=0 and gpl == ty_pe and (not player_list[arg3] or player_list[arg3] + 30 < GetTime() ) then
 				player_list[arg3] = GetTime()
-				C_PartyInfo.InviteUnit(arg3)
+				local InviteUnit = InviteUnit
+				if InviteUnit == nil then
+					InviteUnit = C_PartyInfo.InviteUnit
+				end
+				InviteUnit(arg3)
 			end
 		elseif k == "CHAT_MSG_SYSTEM" then
 			local uname = string.match(gpl,string.gsub(ERR_DECLINE_GROUP_S,"%%s","(.*)"))
@@ -809,11 +820,13 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 			local nm = GetNumGroupMembers()
 			if nm ~= 0 and nm ~= 5 and nm ~= 40 and UnitIsGroupLeader("player") then
 				Auto:UnregisterEvent("GROUP_ROSTER_UPDATE")
-				Auto:RegisterEvent("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS",event_func)
-				if profile.hardware then
-					show_popup(name,{nop,START_A_GROUP,create})
-				else
-					create()
+				if lfg_enabled then
+					Auto:RegisterEvent("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS",event_func)
+					if profile.hardware then
+						show_popup(name,{nop,START_A_GROUP,create})
+					else
+						create()
+					end
 				end
 			end
 		elseif k == "LFG_LIST_ACTIVE_ENTRY_UPDATE" then
