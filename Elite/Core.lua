@@ -32,27 +32,33 @@ local function cofunc(npc_id,name,guid)
 	if quest_id then
 		return
 	end
-	local activityID
-	local activities = C_LFGList.GetAvailableActivities()
-	local C_LFGList_GetActivityInfoExpensive = C_LFGList.GetActivityInfoExpensive
-	for i=1,#activities do
-		if C_LFGList_GetActivityInfoExpensive(activities[i]) then
-			activityID = activities[i]
-			break
+	local create, search
+	if C_LFGList.IsLookingForGroupEnabled() then
+		local activityID
+		local activities = C_LFGList.GetAvailableActivities()
+		local C_LFGList_GetActivityInfoExpensive = C_LFGList.GetActivityInfoExpensive
+		for i=1,#activities do
+			if C_LFGList_GetActivityInfoExpensive(activities[i]) then
+				activityID = activities[i]
+				break
+			end
 		end
-	end
-	if activityID == nil then
-		activityID = 280
-	end
-	local infotb = C_LFGList.GetActivityInfoTable(activityID)
-	local categoryID = infotb.categoryID
-	local filters = infotb.filters
-	local function create()
-		C_LFGList.CreateListing(activityID,0.1,0,true,false)
-	end
-	local function search()
-		C_LFGList.SetSearchToActivity(activityID)
-		return LookingForGroup.Search(categoryID,filters,0)
+		if activityID == nil then
+			activityID = 280
+		end
+		local infotb = C_LFGList.GetActivityInfoTable(activityID)
+		local categoryID = infotb.categoryID
+		local filters = infotb.filters
+		create = function()
+			C_LFGList.CreateListing(activityID,0.1,0,true,false)
+		end
+		search = function()
+			C_LFGList.SetSearchToActivity(activityID)
+			return LookingForGroup.Search(categoryID,filters,0)
+		end
+	else
+		create = nop
+		search = nop
 	end
 	local confirm_keyword = "<LFG>Elite"..npc_id
 	if LookingForGroup.accepted(name,search,create,0,nil,confirm_keyword) then
@@ -93,16 +99,30 @@ function LookingForGroup_Elite:PLAYER_TARGET_CHANGED()
 						return
 					end
 					local i=1
-					local n=GetNumQuestLogEntries()
-					while i<=n do
-						local info = GetInfo(i)
-						if info then
-							local title = info.title
+					local n=0
+					local GetInfo = C_QuestLog.GetInfo
+					if GetInfo then
+						n = C_QuestLog.GetNumQuestLogEntries()
+						while i<=n do
+							local title = GetQuestLogTitle(i)
 							if title and title:find(name) then
 								break
 							end
+							i=i+1
 						end
-						i=i+1
+					else
+						
+						n=GetNumQuestLogEntries()
+						while i<=n do
+							local info = GetInfo(i)
+							if info then
+								local title = info.title
+								if title and title:find(name) then
+									break
+								end
+							end
+							i=i+1
+						end
 					end
 					if n<i then
 						local player_level = UnitLevel("player")
