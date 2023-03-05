@@ -41,6 +41,7 @@ end
 
 function LookingForGroup_Q:OnEnable()
 	LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED")
+	LookingForGroup_Q:RegisterEvent("QUEST_WATCH_UPDATE","QUEST_ACCEPTED")
 	LookingForGroup_Q:RegisterMessage("LFG_SECURE_QUEST_ACCEPTED")
 	if not C_LFGList.IsLookingForGroupEnabled() then
 		LookingForGroup_Q:RegisterEvent("QUEST_LOG_UPDATE")
@@ -149,7 +150,8 @@ local function cofunc(quest_id,secure,gp)
 		return
 	end
 	local current = coroutine.running()
-	LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED",function(event,id)
+
+	local function accepted_function(event,id)
 		if IsInGroup() then
 			if quest_id == id then
 				LookingForGroup.resume(current,3)
@@ -157,8 +159,11 @@ local function cofunc(quest_id,secure,gp)
 		else
 			LookingForGroup.resume(current)
 			LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED")
+			LookingForGroup_Q:RegisterEvent("QUEST_WATCH_UPDATE")
 		end
-	end)
+	end
+	LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED",accepted_function)
+	LookingForGroup_Q:RegisterEvent("QUEST_WATCH_UPDATE",accepted_function)
 	LookingForGroup_Q:RegisterEvent("QUEST_TURNED_IN",function(info,id)
 		if quest_id == id then
 			LookingForGroup.resume(current,0,gp)
@@ -180,6 +185,7 @@ local function cofunc(quest_id,secure,gp)
 	LookingForGroup_Q:UnregisterEvent("QUEST_TURNED_IN")
 	LookingForGroup_Q:UnregisterEvent("QUEST_REMOVED")
 	LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED")
+	LookingForGroup_Q:RegisterEvent("QUEST_WATCH_UPDATE","QUEST_ACCEPTED")
 end
 
 local function is_group_q(id,ignore)
@@ -266,28 +272,6 @@ function LookingForGroup_Q:QUEST_ACCEPTED(event,quest_id)
 	end
 	if is_group_q(quest_id) then
 		coroutine.wrap(cofunc)(quest_id,0)
-	end
-end
-
-local function questlogcoro()
-	if LookingForGroup.accepted(UNKNOWN,nil,nop,0,false,UNKNOWN,"<LFG>QUNKNOWN") then
-		return
-	end
-	LookingForGroup.autoloop(UNKNOWN,nop,false,"<LFG>QUNKNOWN","<LFG>QUNKNOWN",function()
-		return true
-	end)
-end
-
-function LookingForGroup_Q:QUEST_LOG_UPDATE()
-	local load_time = LookingForGroup.load_time
-	if load_time == nil or GetTime() < load_time + 5 then
-		return
-	end
-	if C_LFGList.IsLookingForGroupEnabled() then
-		self:UnregisterEvent("QUEST_LOG_UPDATE")
-	end
-	if LookingForGroup.auto_is_running == nil then
-		coroutine.wrap(questlogcoro)()
 	end
 end
 
