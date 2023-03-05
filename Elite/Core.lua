@@ -33,7 +33,7 @@ local function cofunc(npc_id,name,guid)
 		return
 	end
 	local create, search
-	if C_LFGList.IsLookingForGroupEnabled() then
+	if LookingForGroup.IsLookingForGroupEnabled() then
 		local activityID
 		local activities = C_LFGList.GetAvailableActivities()
 		local C_LFGList_GetActivityInfoExpensive = C_LFGList.GetActivityInfoExpensive

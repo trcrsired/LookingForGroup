@@ -32,7 +32,6 @@ function LookingForGroup.accepted(name,search,create,secure,raid,keyword,ty_pe,c
 	if (secure <= 0 and profile.disable_auto) or is_queueing_lfg() or LookingForGroup.auto_is_running then
 		return true
 	end
-
 	if not LookingForGroup.IsLookingForGroupEnabled() then
 		return
 	end
@@ -502,7 +501,6 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 		LookingForGroup.resume(current,...)
 	end
 	Auto:UnregisterEvent("GROUP_ROSTER_UPDATE")
-
 	local lfg_enabled = LookingForGroup.IsLookingForGroupEnabled()
 	if lfg_enabled then
 		Auto:RegisterEvent("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS",event_func)
@@ -684,12 +682,16 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 			end
 		elseif k == 11 then
 			if not IsInInstance() then
-				C_PartyInfo.LeaveParty()
+				if IsInGroup() then
+					C_PartyInfo.LeaveParty()
+				else
+					break
+				end
 			end
 		elseif k == 17 or k == 18 then
 			if ((lfg_enabled and C_LFGList.HasActiveEntryInfo() and LFGListUtil_IsEntryEmpowered()) or 
 				((not lfg_enabled) and not IsInGroup() or UnitIsGroupLeader("player") or UnitIsGroupAssistant("player")))
-				and UnitExists(arg3) and
+				and UnitExists(arg3) and not UnitIsUnit(arg3,"player") and
 				not UnitInAnyGroup(arg3) and UnitIsPlayer(arg3) and UnitIsFriend(arg3,"player") and
 				not UnitOnTaxi(arg3) and (UnitAffectingCombat(arg3) or (k==17 and GetUnitSpeed(arg3) == 0)) then
 				local q
@@ -791,7 +793,9 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 				if InviteUnit == nil then
 					InviteUnit = C_PartyInfo.InviteUnit
 				end
-				InviteUnit(arg3)
+				if not UnitIsUnit(arg3,"player") then
+					InviteUnit(arg3)
+				end
 			end
 		elseif k == "CHAT_MSG_SYSTEM" then
 			local uname = string.match(gpl,string.gsub(ERR_DECLINE_GROUP_S,"%%s","(.*)"))

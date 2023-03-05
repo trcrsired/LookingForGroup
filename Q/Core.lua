@@ -94,8 +94,8 @@ local function cofunc(quest_id,secure,gp)
 	end
 	local create, search
 	local confirm_keyword
-	local raid
-	if C_LFGList.IsLookingForGroupEnabled() then
+	local raid	
+	if LookingForGroup.IsLookingForGroupEnabled() then
 		local activityID = C_LFGList.GetActivityIDForQuestID(quest_id)
 		if activityID  == nil then
 			local activities = C_LFGList.GetAvailableActivities()
@@ -110,7 +110,6 @@ local function cofunc(quest_id,secure,gp)
 				activityID = 280 --use wandering isle activity since no one will use it unless you are a level capped neutral pandaren like me
 			end
 		end
-
 		local activity_infotb = C_LFGList.GetActivityInfoTable(activityID)
 		local categoryID, iLevel, filters = activity_infotb.categoryID,activity_infotb.ilvlSuggestion,activity_infotb.filters
 		confirm_keyword = not C_LFGList.CanCreateQuestGroup(quest_id) and tostring(quest_id) or nil
@@ -141,7 +140,6 @@ local function cofunc(quest_id,secure,gp)
 		confirm_keyword = tostring(quest_id)
 		create = nop
 	end
-
 	LookingForGroup_Q:RegisterEvent("QUEST_REMOVED",func)
 	if LookingForGroup.accepted(questName,search,create,secure,raid,confirm_keyword,"<LFG>Q",gp) then
 		return

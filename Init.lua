@@ -352,7 +352,7 @@ function LookingForGroup.lfglist_apis(LFGList)
 end
 
 function LookingForGroup.IsLookingForGroupEnabled()
-	local lfggroupenabled = LookingForGroup.IsLookingForGroupEnabled
+	local lfggroupenabled = C_LFGList.IsLookingForGroupEnabled
 	if lfggroupenabled then
 		return lfggroupenabled()
 	end
