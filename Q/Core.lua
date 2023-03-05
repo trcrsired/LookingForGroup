@@ -173,6 +173,10 @@ local function is_group_q(id,ignore)
 	if profile.q[id] then
 		return
 	end
+	local GetQuestTagInfo = C_QuestLog.GetQuestTagInfo
+	if GetQuestTagInfo == nil then
+		return
+	end
 	local quest_tb = C_QuestLog.GetQuestTagInfo(id)
 	if quest_tb == nil then
 		return
