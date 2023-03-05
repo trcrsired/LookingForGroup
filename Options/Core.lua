@@ -30,11 +30,14 @@ function LookingForGroup_Options:options_onenable()
 			LoadAddOn(i)
 		end
 	end
-	if LookingForGroup.disable_pve_frame == nop then
+	if LookingForGroup.disable_pve_frame == nop and LookingForGroup.lfgsystemactivate then
 		self:RegisterEvent("LFG_LIST_ACTIVE_ENTRY_UPDATE")
 	end
 	self:RegisterMessage("LFG_UPDATE_EDITING")
-	self:RegisterMessage("LFG_AUTO_MAIN_LOOP")
+
+	if self.LFG_AUTO_MAIN_LOOP then
+		self:RegisterMessage("LFG_AUTO_MAIN_LOOP")
+	end
 	self:RegisterEvent("AJ_PVE_LFG_ACTION")
 	self:RegisterEvent("AJ_PVP_LFG_ACTION")
 	if C_LFGList.HasActiveEntryInfo() then
