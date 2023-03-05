@@ -3,7 +3,7 @@ local LookingForGroup = AceAddon:GetAddon("LookingForGroup")
 
 local LDB = LibStub("LibDataBroker-1.1"):NewDataObject(LFG_TITLE:gsub(" ",""),{
 	type = "data source",
-	icon = 134149,
+	icon = WOW_PROJECT_MAINLINE == WOW_PROJECT_ID and 134149 or 341547,
 })
 
 function LDB:OnClick(button)
@@ -31,6 +31,10 @@ function LDB:OnEnter()
 		if bg_rs then
 			GameTooltip:AddLine(table.concat{"|cffff00ff",KBASE_SEARCH_RESULTS,"(",bg_rs,")|r"})
 		end
+	end
+	local auto_is_running = LookingForGroup.auto_is_running
+	if auto_is_running then
+		GameTooltip:AddDoubleLine("AUTO",auto_is_running)
 	end
 	GameTooltip:Show()
 end
