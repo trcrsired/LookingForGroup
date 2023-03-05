@@ -27,10 +27,16 @@ function LookingForGroup.accepted(name,search,create,secure,raid,keyword,ty_pe,c
 	if C_LFGList.HasActiveEntryInfo() then
 		return
 	end
+
 	local profile = LookingForGroup.db.profile
-	if (secure <= 0 and profile.disable_auto) or is_queueing_lfg() then
+	if (secure <= 0 and profile.disable_auto) or is_queueing_lfg() or LookingForGroup.auto_is_running then
 		return true
 	end
+
+	if not C_LFGList.IsLookingForGroupEnabled() then
+		return
+	end
+
 	local delta = profile.hardware and -1 or 0
 	local current = coroutine.running()
 	local function resume()
@@ -486,8 +492,10 @@ function LookingForGroup.accepted(name,search,create,secure,raid,keyword,ty_pe,c
 	end
 end
 
+
 function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,composition)
 	Auto:SendMessage("LFG_AUTO_MAIN_LOOP",keyword)
+	LookingForGroup.auto_is_running = name
 	local current = coroutine.running()
 	local profile = LookingForGroup.db.profile
 	local function event_func(...)
@@ -515,6 +523,7 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 	local original_tp = ty_pe
 	local invited_tb = {}
 	local has_set_friends
+	local lfg_enabled = C_LFGList.IsLookingForGroupEnabled()
 	if not profile.auto_addons_wqt and in_range then
 		Auto:RegisterEvent("CHAT_MSG_SYSTEM",event_func)
 		UIParent:UnregisterEvent("GROUP_INVITE_CONFIRMATION")
@@ -536,7 +545,7 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 		Auto:RegisterEvent("UNIT_TARGET",event_func,17)
 	end
 	if keyword then
-		if profile.auto_addons_wql then
+		if profile.auto_addons_wql and lfg_enabled then
 			Auto:RegisterEvent("LFG_LIST_APPLICANT_LIST_UPDATED",event_func)
 		end
 		Auto:RegisterEvent("CHAT_MSG_WHISPER",event_func)
@@ -546,25 +555,36 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 			ty_pe = keyword
 		end
 		player_list = {}
-	else
+	elseif lfg_enabled then
 		Auto:RegisterEvent("LFG_LIST_APPLICANT_LIST_UPDATED",event_func)
+		QueueStatusButton:SetGlowLock("lfglist-applicant", false)
 	end
-	QueueStatusButton:SetGlowLock("lfglist-applicant", false)
 	local must
 	Auto:RegisterMessage("LFG_AUTO_MAIN_LOOP",event_func)
-	Auto:RegisterEvent("LFG_LIST_ACTIVE_ENTRY_UPDATE",event_func)
+	Auto:RegisterMessage("LFG_ICON_MIDDLE_CLICK",event_func)
+	if lfg_enabled then
+		Auto:RegisterEvent("LFG_LIST_ACTIVE_ENTRY_UPDATE",event_func)
+	end
 	local tolist
-	if not IsInGroup() and not C_LFGList.HasActiveEntryInfo() then
+	if not IsInGroup() and not C_LFGList.HasActiveEntryInfo() and not lfg_enabled then
 		tolist = true
 	end
 	local invited_applicants_tb = {}
 	local function remain_group_spaces()
-		if not C_LFGList.HasActiveEntryInfo() and not LFGListUtil_IsEntryEmpowered() then
-			return 0
-		end
-		local q = C_LFGList.CanActiveEntryUseAutoAccept() or raid
+		local q
+		if lfg_enabled then
+			if not C_LFGList.HasActiveEntryInfo() and not LFGListUtil_IsEntryEmpowered() then
+				return 0
+			end
+			q = C_LFGList.CanActiveEntryUseAutoAccept() or raid
+		else
+			q = raid
+		end			
 		local n = GetNumGroupMembers()
-		local counter = n+C_LFGList.GetNumInvitedApplicantMembers()
+		local counter = n
+		if lfg_enabled then
+			counter = counter + C_LFGList.GetNumInvitedApplicantMembers()
+		end
 		local maxn = q and 40 or 4
 		if q then
 			maxn = 40
@@ -590,13 +610,15 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 				end
 			end
 		end
-		local C_LFGList_GetApplicantInfo = C_LFGList.GetApplicantInfo
-		for k,v in pairs(invited_applicants_tb) do
-			local info = C_LFGList_GetApplicantInfo(k)
-			if info == nil then
-				invited_applicants_tb[k] = nil
-			elseif info.applicationStatus == "applied" and info.isNew then
-				counter = counter + info.numMembers
+		if lfg_enabled then
+			local C_LFGList_GetApplicantInfo = C_LFGList.GetApplicantInfo
+			for k,v in pairs(invited_applicants_tb) do
+				local info = C_LFGList_GetApplicantInfo(k)
+				if info == nil then
+					invited_applicants_tb[k] = nil
+				elseif info.applicationStatus == "applied" and info.isNew then
+					counter = counter + info.numMembers
+				end
 			end
 		end
 		if maxn <= counter then
@@ -657,12 +679,22 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 				C_PartyInfo.LeaveParty()
 			end
 		elseif k == 17 or k == 18 then
-			if UnitExists(arg3) and C_LFGList.HasActiveEntryInfo() and LFGListUtil_IsEntryEmpowered() and
+			if ((lfg_enabled and C_LFGList.HasActiveEntryInfo() and LFGListUtil_IsEntryEmpowered()) or 
+				((not lfg_enabled) and not IsInGroup() or UnitIsGroupLeader("player") or UnitIsGroupAssistant("player")))
+				and UnitExists(arg3) and
 				not UnitInAnyGroup(arg3) and UnitIsPlayer(arg3) and UnitIsFriend(arg3,"player") and
 				not UnitOnTaxi(arg3) and (UnitAffectingCombat(arg3) or (k==17 and GetUnitSpeed(arg3) == 0)) then
-				local q = C_LFGList.CanActiveEntryUseAutoAccept() or raid
+				local q
+				if lfg_enabled then
+					q = C_LFGList.CanActiveEntryUseAutoAccept() or raid
+				else
+					q = raid
+				end
 				local n = GetNumGroupMembers()
-				local tn = n+C_LFGList.GetNumInvitedApplicantMembers() 
+				local tn = n
+				if lfg_enabled then
+					tn = tn + C_LFGList.GetNumInvitedApplicantMembers() 
+				end
 				local maxn = q and 40 or 4
 				local InviteUnit = C_PartyInfo.InviteUnit
 				if tn < maxn  then
@@ -693,7 +725,12 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 			local UnitIsUnit = UnitIsUnit
 			local UnitExists = UnitExists
 			local UnitIsConnected = UnitIsConnected
-			local q = C_LFGList.CanActiveEntryUseAutoAccept() or raid
+			local q
+			if lfg_enabled then
+				q = C_LFGList.CanActiveEntryUseAutoAccept() or raid
+			else
+				q = raid
+			end
 			local m = min((q and 40 or 5),n)
 			local n = GetNumGroupMembers()
 			local require_kick
@@ -860,6 +897,7 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 	if LookingForGroup.disable_pve_frame == nop then
 		Event:RegisterEvent("LFG_LIST_APPLICANT_UPDATED")
 	end
+	LookingForGroup.auto_is_running = nil
 	UIParent:RegisterEvent("GROUP_INVITE_CONFIRMATION")
 	Auto:UnregisterAllEvents()
 	Auto:UnregisterAllMessages()
