@@ -152,6 +152,14 @@ local function cofunc(quest_id,secure,gp)
 				LookingForGroup.resume(current,3)
 			end
 		else
+			if not LookingForGroup.IsLookingForGroupEnabled() then
+				if LookingForGroup.auto_is_running then
+					if quest_id == id then
+						LookingForGroup.resume(current,3)
+					end
+					return
+				end
+			end
 			LookingForGroup.resume(current)
 			LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED")
 			LookingForGroup_Q:RegisterEvent("QUEST_WATCH_UPDATE","QUEST_ACCEPTED")
@@ -217,6 +225,11 @@ local function is_group_q(id,ignore)
 	end
 	local quest_tb = C_QuestLog.GetQuestTagInfo(id)
 	if quest_tb == nil then
+		if not profile.auto_wq_only then
+			if not LookingForGroup.IsLookingForGroupEnabled() then
+				return true
+			end
+		end
 		return
 	end
 	local tagID = quest_tb.tagID
@@ -266,6 +279,7 @@ function LookingForGroup_Q:QUEST_ACCEPTED(event,quest_id)
 		return
 	end
 	if is_group_q(quest_id) then
+		print(event,"278",quest_id)
 		coroutine.wrap(cofunc)(quest_id,0)
 	end
 end
