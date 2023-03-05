@@ -154,7 +154,7 @@ local function cofunc(quest_id,secure,gp)
 		else
 			LookingForGroup.resume(current)
 			LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED")
-			LookingForGroup_Q:RegisterEvent("QUEST_WATCH_UPDATE")
+			LookingForGroup_Q:RegisterEvent("QUEST_WATCH_UPDATE","QUEST_ACCEPTED")
 		end
 	end
 	LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED",accepted_function)
