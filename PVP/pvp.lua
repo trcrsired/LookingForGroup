@@ -106,7 +106,7 @@ end,true)
 ]]
 
 
-if HonorFrame.QueueButton then
+if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 LFG_OPT:push("honor",{
 	name = PVP_TAB_HONOR,
 	type = "group",
@@ -124,7 +124,7 @@ LFG_OPT:push("honor",{
 })
 end
 
-if ConquestFrame then
+if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 
 LFG_OPT:push("conquest",{
 	name = PVP_TAB_CONQUEST,

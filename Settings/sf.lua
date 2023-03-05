@@ -402,6 +402,13 @@ LookingForGroup_Options:push_settings("sf",{
 					get = get_function_negative,
 					set = set_function_negative
 				},
+				spam_filter_guild =
+				{
+					name = GUILD,
+					type = "toggle",
+					get = LookingForGroup_Options.get_function,
+					set = LookingForGroup_Options.set_function
+				},
 				spam_filter_spaces =
 				{
 					name = "[Space]",

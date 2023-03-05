@@ -960,7 +960,7 @@ LookingForGroup_Options:push("find",{
 						min_dungeon_score =
 						{
 							order = get_order(),
-							name = DUNGEON_SCORE == nil,
+							name = DUNGEON_SCORE == nil and "DS" or DUNGEON_SCORE,
 							type = "input",
 							get = function(info)
 								local sminds = LookingForGroup_Options.db.profile.s.minimum_dungeon_score

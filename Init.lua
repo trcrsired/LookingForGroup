@@ -350,3 +350,14 @@ function LookingForGroup.lfglist_apis(LFGList)
 	end
 	return LFGList
 end
+
+function LookingForGroup.IsLookingForGroupEnabled()
+	local lfggroupenabled = LookingForGroup.IsLookingForGroupEnabled
+	if lfggroupenabled then
+		return lfggroupenabled()
+	end
+	if UnitLevel("player") + 10 < GetMaxLevelForLatestExpansion() then
+		return false
+	end
+	return true
+end

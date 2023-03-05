@@ -43,9 +43,6 @@ function LookingForGroup_Q:OnEnable()
 	LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED")
 	LookingForGroup_Q:RegisterEvent("QUEST_WATCH_UPDATE","QUEST_ACCEPTED")
 	LookingForGroup_Q:RegisterMessage("LFG_SECURE_QUEST_ACCEPTED")
-	if not C_LFGList.IsLookingForGroupEnabled() then
-		LookingForGroup_Q:RegisterEvent("QUEST_LOG_UPDATE")
-	end
 end
 
 local function cofunc(quest_id,secure,gp)

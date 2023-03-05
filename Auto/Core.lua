@@ -33,7 +33,7 @@ function LookingForGroup.accepted(name,search,create,secure,raid,keyword,ty_pe,c
 		return true
 	end
 
-	if not C_LFGList.IsLookingForGroupEnabled() then
+	if not LookingForGroup.IsLookingForGroupEnabled() then
 		return
 	end
 
@@ -503,7 +503,7 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 	end
 	Auto:UnregisterEvent("GROUP_ROSTER_UPDATE")
 
-	local lfg_enabled = C_LFGList.IsLookingForGroupEnabled()
+	local lfg_enabled = LookingForGroup.IsLookingForGroupEnabled()
 	if lfg_enabled then
 		Auto:RegisterEvent("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS",event_func)
 	end
