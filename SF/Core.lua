@@ -17,8 +17,8 @@ local function cofunc()
 		{"CHAT_MSG_SAY","CHAT_MSG_DND","CHAT_MSG_YELL","CHAT_MSG_AFK"},
 		{"CHAT_MSG_PARTY","CHAT_MSG_PARTY_LEADER"},
 		{"CHAT_MSG_RAID","CHAT_MSG_RAID_LEADER","CHAT_MSG_INSTANCE_CHAT","CHAT_MSG_INSTANCE_CHAT_LEADER","CHAT_MSG_RAID_WARNING"},
-		{"CHAT_MSG_WHISPER_INFORM","CHAT_MSG_SYSTEM","CHAT_MSG_IGNORED"}
---		{"CHAT_MSG_GUILD"}
+		{"CHAT_MSG_WHISPER_INFORM","CHAT_MSG_SYSTEM","CHAT_MSG_IGNORED"},
+		{"CHAT_MSG_GUILD"}
 		}
 		local function filter_func(_, event, msg, _, _, _, _, _, _, _, _, _, line_id)
 			return filteredlineid == line_id
@@ -92,6 +92,10 @@ local function cofunc()
 		end
 		if tag == 3 and not profile.spam_filter_emote_xp and IsResting() then
 			whisper = 1
+			break
+		end
+		if tag == 8 and profile.spam_filter_guild then
+			tag = 2
 			break
 		end
 		local filters = profile.addon_filters
