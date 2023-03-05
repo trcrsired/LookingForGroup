@@ -279,7 +279,6 @@ function LookingForGroup_Q:QUEST_ACCEPTED(event,quest_id)
 		return
 	end
 	if is_group_q(quest_id) then
-		print(event,"278",quest_id)
 		coroutine.wrap(cofunc)(quest_id,0)
 	end
 end
