@@ -13,30 +13,34 @@ local function factory(Type,framename,func,challenges)
 				LFG_OPT:SendMessage("LFG_HOOK_CHALLENGESFRAME_UPDATE",...)
 			end)
 		else
-			frame:SetScript("OnHide",function()
-				local HonorInset = PVPQueueFrame.HonorInset
-				HonorInset:SetParent(frame)
-				HonorInset:Hide()
-			end)
-			frame:HookScript("OnShow",function(self)
-				local HonorInset = PVPQueueFrame.HonorInset
+			if PVPQueueFrame then
+				frame:SetScript("OnHide",function()
+					local HonorInset = PVPQueueFrame.HonorInset
+					HonorInset:SetParent(frame)
+					HonorInset:Hide()
+				end)
+				frame:HookScript("OnShow",function(self)
+					local HonorInset = PVPQueueFrame.HonorInset
 
-				HonorInset:SetParent(UIParent)
-				HonorInset:ClearAllPoints()
-				local value = 185
-				HonorInset:SetPoint("TOPRIGHT",self,"TOPRIGHT",value,-25)
-				HonorInset:SetPoint("BOTTOMRIGHT",self,"BOTTOMRIGHT",value,-25)
-				PVPQueueFrame.selection = self
-				if self==ConquestFrame then
-					HonorInset:DisplayRatedPanel()
-				else
-					HonorInset:DisplayCasualPanel()
-				end
-				HonorInset:Show()
-			end)			
+					HonorInset:SetParent(UIParent)
+					HonorInset:ClearAllPoints()
+					local value = 185
+					HonorInset:SetPoint("TOPRIGHT",self,"TOPRIGHT",value,-25)
+					HonorInset:SetPoint("BOTTOMRIGHT",self,"BOTTOMRIGHT",value,-25)
+					PVPQueueFrame.selection = self
+					if self==ConquestFrame then
+						HonorInset:DisplayRatedPanel()
+					else
+						HonorInset:DisplayCasualPanel()
+					end
+					HonorInset:Show()
+				end)
+			end			
 			local ConquestBar = frame.ConquestBar
-			ConquestBar:SetPoint("TOPRIGHT",-32,-19)
-			ConquestBar.Border:SetPoint("RIGHT",9,-2)
+			if ConquestBar then
+				ConquestBar:SetPoint("TOPRIGHT",-32,-19)
+				ConquestBar.Border:SetPoint("RIGHT",9,-2)
+			end
 		end
 		local widget = {
 			alignoffset = frame:GetHeight(),
@@ -64,11 +68,13 @@ end
 
 factory("LFG_OPT_HONOR","HonorFrame",function(frame)
 	local QueueButton = frame.QueueButton
+	if QueueButton then
 	QueueButton:ClearAllPoints()
 	QueueButton:SetPoint("BOTTOMLEFT",0,0)
 	QueueButton:SetPoint("BOTTOMRIGHT",0,0)
 	set_relative(frame.BonusFrame,{"RandomBGButton","RandomEpicBGButton","Arena1Button","BrawlButton","BrawlButton2"})
 	frame.BonusFrame.WorldBattlesTexture:SetAllPoints()
+	end
 --[[
 	local SpecificFrame = frame.SpecificFrame
 	local buttons = SpecificFrame.buttons
@@ -98,6 +104,9 @@ factory("LFG_OPT_CHALLENGES","ChallengesFrame",function(frame)
 	frame.WeeklyInfo.Child.SeasonBest:SetAlpha(0)
 end,true)
 ]]
+
+
+if HonorFrame.QueueButton then
 LFG_OPT:push("honor",{
 	name = PVP_TAB_HONOR,
 	type = "group",
@@ -113,6 +122,9 @@ LFG_OPT:push("honor",{
 		},
 	}
 })
+end
+
+if ConquestFrame then
 
 LFG_OPT:push("conquest",{
 	name = PVP_TAB_CONQUEST,
@@ -129,6 +141,8 @@ LFG_OPT:push("conquest",{
 		}
 	}
 })
+
+end
 --[[
 LFG_OPT:push("challenge",{
 	name = PLAYER_DIFFICULTY5,

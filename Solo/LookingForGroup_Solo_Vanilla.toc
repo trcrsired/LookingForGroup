@@ -1,8 +1,0 @@
-## Interface: 11403
-## Author: cqwrteur
-## Title: LookingForGroup Solo
-## Dependencies: LookingForGroup_Options
-## LoadOnDemand: 1
-## X-LFG-OPT: 0
-
-solo.lua

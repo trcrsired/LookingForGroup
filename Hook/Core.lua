@@ -2,6 +2,7 @@ local LookingForGroup = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup")
 local Hook = LookingForGroup:NewModule("Hook","AceHook-3.0")
 
 function Hook:OnInitialize()
+	if WOW_PROJECT_ID == 1 or WOW_PROJECT_ID >= 11 then
 	self:SecureHook("QuestObjectiveSetupBlockButton_FindGroup")
 	self:SecureHook("QuestObjectiveReleaseBlockButton_FindGroup")
 	local disable_pve_frame = LookingForGroup.disable_pve_frame
@@ -60,6 +61,7 @@ function Hook:OnInitialize()
 			SearchBox.clearButton:SetScript("OnClick",original_clearbutton_onclick)
 			SearchBox:Show()
 		end)
+	end
 	end
 	self.OnInitialize=nil
 	self.quest_objective_pool = CreateFramePool("BUTTON", nil, "QuestObjectiveFindGroupButtonTemplate", function(framePool, frame)

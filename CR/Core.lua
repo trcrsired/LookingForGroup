@@ -161,86 +161,88 @@ local function hop()
 --	if activity_id == 1062 then
 	local activity_id = 16
 --	end
-	local activityinfo_tb = C_LFGList.GetActivityInfoTable(activity_id)
-	local function search()
-		if results_cache and results_cache.activity_id == activity_id then
-			local GetSearchResultInfo = C_LFGList.GetSearchResultInfo
-			while #results_cache ~= 0 do
-				local info = GetSearchResultInfo(results_cache[#results_cache])
-				if info and not isDelisted and (info.questID or info.numMembers ~= 5) then
-					break
-				else
-					results_cache[#results_cache]=nil
+	if C_LFGList.GetActivityInfoTable then
+		local activityinfo_tb = C_LFGList.GetActivityInfoTable(activity_id)
+		local function search()
+			if results_cache and results_cache.activity_id == activity_id then
+				local GetSearchResultInfo = C_LFGList.GetSearchResultInfo
+				while #results_cache ~= 0 do
+					local info = GetSearchResultInfo(results_cache[#results_cache])
+					if info and not isDelisted and (info.questID or info.numMembers ~= 5) then
+						break
+					else
+						results_cache[#results_cache]=nil
+					end
+				end
+				if results_cache and #results_cache ~= 0 then
+					results_cache.activity_id = activity_id
+					return #results_cache,results_cache,true
 				end
 			end
-			if results_cache and #results_cache ~= 0 then
-				results_cache.activity_id = activity_id
-				return #results_cache,results_cache,true
-			end
-		end
-		C_LFGList.SetSearchToActivity(activity_id)
-		local count,results = LookingForGroup.Search(activityinfo_tb.categoryID,activityinfo_tb.filters,0,true)
-		if rare == 1 then
-			if results then
-				rare_filter(results)
-			end
-		end
-		results_cache = results
-		if results_cache then
-			results_cache.activity_id = activity_id		
-		end
-		return count,results_cache
-	end
-	local current = coroutine.running()
-	local function resume()
-		LookingForGroup.resume(current,4)
-	end
-	local zone_text = activityinfo_tb.fullName or activityinfo_tb.shortName
-	if LookingForGroup.accepted(zone_text,search,nil,1,true) then
-		LookingForGroup:Print(LFG_LIST_NO_RESULTS_FOUND)
-		return
-	end
-	local show_popup = LookingForGroup.show_popup
-	while true do
-		if rare~=1 then
-			coroutine.wrap(scan)()
-		end
-		local timer = C_Timer.NewTimer(5,resume)
-		LookingForGroup_CR:RegisterEvent("GROUP_LEFT",resume)
-		local yd = coroutine.yield()
-		LookingForGroup_CR:UnregisterEvent("GROUP_LEFT")
-		timer:Cancel()
-		if IsInInstance() then return end
-		if yd == 4 then
-			local tb = {nop}
-			if IsInGroup() then
-				tb[#tb+1] = PARTY_LEAVE
-				tb[#tb+1] = function()
-					C_PartyInfo.LeaveParty()
-					LookingForGroup.resume(current,5)
+			C_LFGList.SetSearchToActivity(activity_id)
+			local count,results = LookingForGroup.Search(activityinfo_tb.categoryID,activityinfo_tb.filters,0,true)
+			if rare == 1 then
+				if results then
+					rare_filter(results)
 				end
 			end
-			tb[#tb+1]=NEXT
-			tb[#tb+1]=function() LookingForGroup.resume(current,6) end
-			show_popup(zone_text,tb)
-			if coroutine.yield()==6 then
-				if IsInInstance() then return end
+			results_cache = results
+			if results_cache then
+				results_cache.activity_id = activity_id		
+			end
+			return count,results_cache
+		end
+		local current = coroutine.running()
+		local function resume()
+			LookingForGroup.resume(current,4)
+		end
+		local zone_text = activityinfo_tb.fullName or activityinfo_tb.shortName
+		if LookingForGroup.accepted(zone_text,search,nil,1,true) then
+			LookingForGroup:Print(LFG_LIST_NO_RESULTS_FOUND)
+			return
+		end
+		local show_popup = LookingForGroup.show_popup
+		while true do
+			if rare~=1 then
+				coroutine.wrap(scan)()
+			end
+			local timer = C_Timer.NewTimer(5,resume)
+			LookingForGroup_CR:RegisterEvent("GROUP_LEFT",resume)
+			local yd = coroutine.yield()
+			LookingForGroup_CR:UnregisterEvent("GROUP_LEFT")
+			timer:Cancel()
+			if IsInInstance() then return end
+			if yd == 4 then
+				local tb = {nop}
 				if IsInGroup() then
-					C_PartyInfo.LeaveParty()
-					results_cache = nil
+					tb[#tb+1] = PARTY_LEAVE
+					tb[#tb+1] = function()
+						C_PartyInfo.LeaveParty()
+						LookingForGroup.resume(current,5)
+					end
 				end
-				if LookingForGroup.accepted(zone_text,search,nil,1,true) then
-					LookingForGroup:Print(LFG_LIST_NO_RESULTS_FOUND)
-					return
+				tb[#tb+1]=NEXT
+				tb[#tb+1]=function() LookingForGroup.resume(current,6) end
+				show_popup(zone_text,tb)
+				if coroutine.yield()==6 then
+					if IsInInstance() then return end
+					if IsInGroup() then
+						C_PartyInfo.LeaveParty()
+						results_cache = nil
+					end
+					if LookingForGroup.accepted(zone_text,search,nil,1,true) then
+						LookingForGroup:Print(LFG_LIST_NO_RESULTS_FOUND)
+						return
+					end
+				else
+					break
 				end
 			else
 				break
 			end
-		else
-			break
 		end
-	end
-	LookingForGroup.popup:Hide()
+		LookingForGroup.popup:Hide()
+		end
 end
 
 function LookingForGroup_CR:LFG_ICON_RIGHT_CLICK(message,r)

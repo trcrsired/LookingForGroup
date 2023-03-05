@@ -960,7 +960,7 @@ LookingForGroup_Options:push("find",{
 						min_dungeon_score =
 						{
 							order = get_order(),
-							name = DUNGEON_SCORE,
+							name = DUNGEON_SCORE == nil,
 							type = "input",
 							get = function(info)
 								local sminds = LookingForGroup_Options.db.profile.s.minimum_dungeon_score
@@ -1029,7 +1029,7 @@ LookingForGroup_Options:push("find",{
 							get = LookingForGroup_Options.options_get_s_function,
 							set = LookingForGroup_Options.options_set_s_function
 						},
-						notcrossfactiongroup =
+						notcrossfactiongroup = LFG_LIST_CROSS_FACTION and
 						{
 							order = get_order(),
 							name = LFG_LIST_CROSS_FACTION:format(LookingForGroup_Options.player_localized_faction_name),
@@ -1046,7 +1046,7 @@ LookingForGroup_Options:push("find",{
 								end
 								LookingForGroup_Options.db.profile.s.notcrossfactiongroup=val
 							end
-						},
+						} or nil,
 						quest_id =
 						{
 							order = get_order(),

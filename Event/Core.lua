@@ -2,7 +2,9 @@ local LookingForGroup = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup")
 local Event = LookingForGroup:NewModule("Event","AceEvent-3.0")
 
 function Event:OnEnable()
-	LFGListInviteDialog:UnregisterAllEvents()
+	if LFGListInviteDialog then
+		LFGListInviteDialog:UnregisterAllEvents()
+	end
 	self:RegisterEvent("PARTY_INVITE_REQUEST")
 	UIParent:UnregisterEvent("PARTY_INVITE_REQUEST")
 	local profile = LookingForGroup.db.profile
@@ -18,10 +20,12 @@ function Event:OnEnable()
 			frames[i]:UnregisterEvent("SOCIAL_QUEUE_UPDATE")
 		end
 		FriendsFrameTab4:Hide()
-		QuickJoinFrame:Hide()
-		QuickJoinToastButton:Hide()
-		QuickJoinFrame:UnregisterAllEvents()
-		QuickJoinToastButton:UnregisterAllEvents()
+		if QuickJoinFrame then
+			QuickJoinFrame:Hide()
+			QuickJoinToastButton:Hide()
+			QuickJoinFrame:UnregisterAllEvents()
+			QuickJoinToastButton:UnregisterAllEvents()
+		end
 	end
 	local elvui = LibStub("AceAddon-3.0"):GetAddon("ElvUI",true)
 	if elvui then
@@ -37,6 +41,7 @@ function Event:OnEnable()
 		end)
 	end
 	self.OnEnable = nil
+	if C_LFGList.GetNumApplications then
 	local numApplications, numActiveApplications = C_LFGList.GetNumApplications()
 	if numActiveApplications ~= 0 then
 		local applications = C_LFGList.GetApplications()
@@ -49,23 +54,38 @@ function Event:OnEnable()
 			end
 		end
 	end
-	if LookingForGroup.disable_pve_frame == nop then
-		LFGEventFrame:UnregisterEvent("LFG_UPDATE")
-		LFGEventFrame:UnregisterEvent("LFG_LIST_ACTIVE_ENTRY_UPDATE");
-		LFGEventFrame:UnregisterEvent("LFG_LIST_SEARCH_RESULT_UPDATED");
-		PVEFrame:UnregisterAllEvents()
-		LFDParentFrame:UnregisterEvent("AJ_DUNGEON_ACTION")
-		LFDParentFrame:UnregisterEvent("LFG_OPEN_FROM_GOSSIP")
-		RaidFinderFrame:UnregisterAllEvents()
-		LFGListFrame:UnregisterAllEvents()
-		LFGListFrame:RegisterEvent("LFG_LIST_APPLICATION_STATUS_UPDATED")
-	else
-		LFGListFrame:UnregisterEvent("LFG_LIST_ACTIVE_ENTRY_UPDATE")
-		LFGListFrame:UnregisterEvent("LFG_LIST_APPLICANT_UPDATED")
 	end
-	self:RegisterEvent("LFG_LIST_ACTIVE_ENTRY_UPDATE")
-	self:RegisterEvent("LFG_LIST_APPLICANT_UPDATED")
-	self:RegisterEvent("LFG_LIST_APPLICATION_STATUS_UPDATED")
+	if LookingForGroup.disable_pve_frame == nop then
+		if LFGEventFrame then
+			LFGEventFrame:UnregisterEvent("LFG_UPDATE")
+			LFGEventFrame:UnregisterEvent("LFG_LIST_ACTIVE_ENTRY_UPDATE");
+			LFGEventFrame:UnregisterEvent("LFG_LIST_SEARCH_RESULT_UPDATED");
+		end
+		if PVEFrame then
+			PVEFrame:UnregisterAllEvents()
+		end
+		if LFDParentFrame then
+			LFDParentFrame:UnregisterEvent("AJ_DUNGEON_ACTION")
+			LFDParentFrame:UnregisterEvent("LFG_OPEN_FROM_GOSSIP")
+		end
+		if RaidFinderFrame then
+			RaidFinderFrame:UnregisterAllEvents()
+		end
+		if LFGListFrame then
+			LFGListFrame:UnregisterAllEvents()
+			LFGListFrame:RegisterEvent("LFG_LIST_APPLICATION_STATUS_UPDATED")
+		end
+	else
+		if LFGListFrame then
+			LFGListFrame:UnregisterEvent("LFG_LIST_ACTIVE_ENTRY_UPDATE")
+			LFGListFrame:UnregisterEvent("LFG_LIST_APPLICANT_UPDATED")
+		end
+	end
+	if LookingForGroup.lfgsystemactivate then
+		self:RegisterEvent("LFG_LIST_ACTIVE_ENTRY_UPDATE")
+		self:RegisterEvent("LFG_LIST_APPLICANT_UPDATED")
+		self:RegisterEvent("LFG_LIST_APPLICATION_STATUS_UPDATED")
+	end
 end
 
 function Event:LFG_LIST_APPLICANT_UPDATED()

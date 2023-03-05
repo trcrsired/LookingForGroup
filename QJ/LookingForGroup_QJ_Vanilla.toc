@@ -1,9 +1,0 @@
-## Interface: 11403
-## Author: cqwrteur
-## Title: LookingForGroup Quick Join
-## Dependencies: LookingForGroup_Options
-## LoadOnDemand: 1
-## X-LFG-OPT: 0
-
-checkbox.lua
-Core.lua

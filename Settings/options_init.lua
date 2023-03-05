@@ -149,6 +149,7 @@ function LookingForGroup_Options:OnEnable()
 end
 
 function LookingForGroup_Options.OnProfileChanged(update_db)
+	if LookingForGroup.lfgsystemactivate then
 	local type = type
 	local category=LookingForGroup_Options.db.profile.a.category
 	local category_callbacks = LookingForGroup_Options.category_callbacks
@@ -178,6 +179,7 @@ function LookingForGroup_Options.OnProfileChanged(update_db)
 		elseif update_db then
 			ci()
 		end
+	end
 	end
 end
 

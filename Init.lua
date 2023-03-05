@@ -5,7 +5,9 @@ function LookingForGroup:OnInitialize()
 	self:RegisterChatCommand("LookingForGroup", "ChatCommand")
 	self:RegisterChatCommand("LFG", "ChatCommand")
 	self:RegisterChatCommand(LFG_TITLE:gsub(" ",""), "ChatCommand")
-
+	if LFGListFrame then
+		LookingForGroup.lfgsystemactivate = true
+	end
 	local disable_pve_frame
 	local GetAddOnMetadata = GetAddOnMetadata
 	local GetAddOnInfo = GetAddOnInfo
@@ -18,7 +20,16 @@ function LookingForGroup:OnInitialize()
 			end
 		end
 	end
+	local portal = GetCVar("portal")
+	local isprivateserver
+	if portal == "127.0.0.1" then
+		isprivateserver = true
+	end
 	local region = GetCurrentRegion()
+	if isprivateserver then
+		region = GetRealmName()
+		LookingForGroup.privateservername = region
+	end
 	for i = 1, GetNumAddOns() do
 		local metadata = GetAddOnMetadata(i, "X-LFG-REGION")
 		if metadata and (metadata == "0" or region == tonumber(metadata)) then

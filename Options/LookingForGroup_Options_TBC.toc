@@ -17,5 +17,5 @@
 ..\LookingForGroup_Settings\locale\locale.xml
 ..\LookingForGroup_Settings\options_init.lua
 listing.lua
-module.xml
+module_classic.xml
 Core.lua
