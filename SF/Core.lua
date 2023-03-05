@@ -55,7 +55,10 @@ local function cofunc()
 	local db = LookingForGroup.db
 	local UnitGUID = UnitGUID
 	local C_FriendList_IsFriend = C_FriendList.IsFriend
-	local C_BattleNet_GetAccountInfoByGUID = C_BattleNet.GetAccountInfoByGUID
+	local C_BattleNet_GetAccountInfoByGUID
+	if C_BattleNet then
+		C_BattleNet_GetAccountInfoByGUID = C_BattleNet.GetAccountInfoByGUID
+	end
 	local string_find = string.find
 	local tag, event, msg, player, language, arg6, arg7, flag, channelId, channelNum, arg11, arg12, line_id, guid = coroutine.yield()
 	local silenting
@@ -144,7 +147,7 @@ local function cofunc()
 		end
 		if tag == 1 then
 			if guid and guid:find("^Player") then
-				if (IsGuildMember(guid) or C_FriendList_IsFriend(guid) or UnitInRaid(player) or UnitInParty(player) or select(2,C_BattleNet_GetAccountInfoByGUID(guid))) then
+				if (IsGuildMember(guid) or C_FriendList_IsFriend(guid) or UnitInRaid(player) or UnitInParty(player) or (C_BattleNet_GetAccountInfoByGUID and select(2,C_BattleNet_GetAccountInfoByGUID(guid)))) then
 					break
 				end
 			end
