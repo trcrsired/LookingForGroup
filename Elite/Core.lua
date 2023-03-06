@@ -16,7 +16,7 @@ function LookingForGroup_Elite:OnEnable()
 end
 
 local function cofunc(npc_id,name,guid)
-	local quest_id,questName
+	local quest_id
 	local n_npcid = tonumber(npc_id)
 	if 120393 <= n_npcid and n_npcid <= 127706 then
 		local C_TaskQuest_GetQuestInfoByQuestID = C_TaskQuest.GetQuestInfoByQuestID
@@ -24,7 +24,6 @@ local function cofunc(npc_id,name,guid)
 			local title = C_TaskQuest_GetQuestInfoByQuestID(i)
 			if title and title:find(name) then
 				quest_id = i
-				questName = title
 				break
 			end
 		end
@@ -32,7 +31,13 @@ local function cofunc(npc_id,name,guid)
 	if quest_id then
 		return
 	end
-	local create, search
+	local parameterstb = {
+	name = name,
+	create = nop,
+	search = nop,
+	secure = 0,
+	confirm_keyword = "<LFG>Elite"..npc_id,
+	in_range = true}
 	if LookingForGroup.IsLookingForGroupEnabled() then
 		local activityID
 		local activities = C_LFGList.GetAvailableActivities()
@@ -49,19 +54,15 @@ local function cofunc(npc_id,name,guid)
 		local infotb = C_LFGList.GetActivityInfoTable(activityID)
 		local categoryID = infotb.categoryID
 		local filters = infotb.filters
-		create = function()
+		parameterstb.create = function()
 			C_LFGList.CreateListing(activityID,0.1,0,true,false)
 		end
-		search = function()
+		parameterstb.search = function()
 			C_LFGList.SetSearchToActivity(activityID)
 			return LookingForGroup.Search(categoryID,filters,0)
 		end
-	else
-		create = nop
-		search = nop
 	end
-	local confirm_keyword = "<LFG>Elite"..npc_id
-	if LookingForGroup.accepted(name,search,create,0,nil,confirm_keyword) then
+	if LookingForGroup.accepted(parameterstb) then
 		return
 	end
 	local current = coroutine.running()
@@ -75,9 +76,7 @@ local function cofunc(npc_id,name,guid)
 			LookingForGroup.resume(current,0)
 		end
 	end)
-	LookingForGroup.autoloop(name,create,true,nil,confirm_keyword,function()
-		return true
-	end)
+	LookingForGroup.autoloop(parameterstb)
 	LookingForGroup_Elite:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	LookingForGroup_Elite:RegisterEvent("LOADING_SCREEN_DISABLED")
 	LookingForGroup_Elite:LOADING_SCREEN_DISABLED()
@@ -104,7 +103,7 @@ function LookingForGroup_Elite:PLAYER_TARGET_CHANGED()
 					if GetInfo then
 						n = C_QuestLog.GetNumQuestLogEntries()
 						while i<=n do
-							local title = GetQuestLogTitle(i)
+							local title = C_QuestLog.GetQuestLogTitle(i)
 							if title and title:find(name) then
 								break
 							end

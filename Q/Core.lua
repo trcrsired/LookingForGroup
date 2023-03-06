@@ -45,6 +45,28 @@ function LookingForGroup_Q:OnEnable()
 	LookingForGroup_Q:RegisterMessage("LFG_SECURE_QUEST_ACCEPTED")
 end
 
+local function get_quest_tag_info(questID)
+	local GetQuestTagInfo = GetQuestTagInfo
+	if GetQuestTagInfo then
+		local tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, displayTimeLeft = GetQuestTagInfo(questID)
+		if tagID == nil then
+			return nil
+		end
+		return
+		{
+			tagName = tagName,
+			tagID = tagID,
+			worldQuestType = worldQuestType,
+			quality = rarity,
+			tradeskillLineID = tradeskillLineIndex,
+			isElite = isElite,
+			displayExpiration = displayTimeLeft
+		}
+	else
+		return C_QuestLog.GetQuestTagInfo(questID)
+	end
+end
+
 local function cofunc(quest_id,secure,gp)
 	local questName = C_TaskQuest.GetQuestInfoByQuestID(quest_id)
 	if questName == nil then
@@ -92,9 +114,18 @@ local function cofunc(quest_id,secure,gp)
 			return
 		end
 	end
-	local create, search
-	local confirm_keyword
-	local raid	
+	local acceptedtb =
+	{name = questName,
+	secure=secure,
+	in_range = function()
+		if C_TaskQuest.GetDistanceSqToQuest then
+			local distance = C_TaskQuest.GetDistanceSqToQuest(quest_id)
+			return not distance or distance < 40000
+		else
+			return true
+		end
+	end
+	}
 	if LookingForGroup.IsLookingForGroupEnabled() then
 		local activityID = C_LFGList.GetActivityIDForQuestID(quest_id)
 		if activityID  == nil then
@@ -112,8 +143,8 @@ local function cofunc(quest_id,secure,gp)
 		end
 		local activity_infotb = C_LFGList.GetActivityInfoTable(activityID)
 		local categoryID, iLevel, filters = activity_infotb.categoryID,activity_infotb.ilvlSuggestion,activity_infotb.filters
-		confirm_keyword = not C_LFGList.CanCreateQuestGroup(quest_id) and tostring(quest_id) or nil
-		create= function()
+		local confirm_keyword = not C_LFGList.CanCreateQuestGroup(quest_id) and tostring(quest_id) or nil
+		acceptedtb.create= function()
 			local ilvl = 0
 			if confirm_keyword then
 				if math.floor(ilvl) == ilvl then
@@ -125,27 +156,24 @@ local function cofunc(quest_id,secure,gp)
 				C_LFGList.CreateListing(activityID,ilvl,0,true,false,quest_id)
 			end
 		end
-		search = function()
+		acceptedtb.search = function()
 			if not confirm_keyword then
 				C_LFGList.SetSearchToQuestID(quest_id)
 			end
 			return LookingForGroup.Search(categoryID,filters,0)
 		end
-		local tb = C_QuestLog.GetQuestTagInfo(quest_id)
-		if tb then
-			raid = tb.quality == 2
-		end
+		acceptedtb.confirm_keyword = confirm_keyword
 	else
-		raid = false
-		confirm_keyword = tostring(quest_id)
-		create = nop
+		acceptedtb.confirm_keyword = tostring(quest_id)
+		acceptedtb.create = nop
 	end
+	local quest_tag_tb = get_quest_tag_info(quest_id)
+	acceptedtb.raid = quest_tag_tb and quest_tag_tb.quality == 2
 	LookingForGroup_Q:RegisterEvent("QUEST_REMOVED",func)
-	if LookingForGroup.accepted(questName,search,create,secure,raid,confirm_keyword,"<LFG>Q",gp) then
+	if LookingForGroup.accepted(acceptedtb) then
 		return
 	end
 	local current = coroutine.running()
-
 	local function accepted_function(event,id)
 		if IsInGroup() then
 			if quest_id == id then
@@ -177,14 +205,7 @@ local function cofunc(quest_id,secure,gp)
 			LookingForGroup.resume(current,1,gp)
 		end
 	end)
-	LookingForGroup.autoloop(questName,create,raid,confirm_keyword,"<LFG>Q",function()
-		if C_TaskQuest.GetDistanceSqToQuest then
-			local distance = C_TaskQuest.GetDistanceSqToQuest(quest_id)
-			return not distance or distance < 40000
-		else
-			return true
-		end
-	end)
+	LookingForGroup.autoloop(acceptedtb)
 	LookingForGroup_Q:UnregisterEvent("QUEST_TURNED_IN")
 	LookingForGroup_Q:UnregisterEvent("QUEST_REMOVED")
 	LookingForGroup_Q:RegisterEvent("QUEST_ACCEPTED")
@@ -216,14 +237,7 @@ local function is_group_q(id,ignore)
 	if profile.q[id] then
 		return
 	end
-	local GetQuestTagInfo = C_QuestLog.GetQuestTagInfo
-	if GetQuestTagInfo == nil then
-		if profile.auto_wq_only then
-			return
-		end
-		return true
-	end
-	local quest_tb = C_QuestLog.GetQuestTagInfo(id)
+	local quest_tb = get_quest_tag_info(id)
 	if quest_tb == nil then
 		if not profile.auto_wq_only then
 			if not LookingForGroup.IsLookingForGroupEnabled() then
@@ -232,9 +246,7 @@ local function is_group_q(id,ignore)
 		end
 		return
 	end
-	local tagID = quest_tb.tagID
-	local wq_type = quest_tb.worldQuestType
-
+	local tagID,wq_type = quest_tb.tagID,quest_tb.worldQuestType
 	if tagID == 62 or tagID == 81 or tagID == 83 or tagID == 117 or tagID == 124 or tagID == 125 or tagID == 147 or tagID == 148 or tagID == 256 or tagID == 255 or tagID == 265 or tagID == 266 or tagID == 268 or tagID ==271 then
 		return
 	end

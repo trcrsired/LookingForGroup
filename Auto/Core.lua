@@ -23,7 +23,7 @@ local function is_queueing_lfg()
 	end
 end
 
-function LookingForGroup.accepted(name,search,create,secure,raid,keyword,ty_pe,create_only,composition,warmode_ignore)
+function LookingForGroup.accepted(tb)
 	if C_LFGList.HasActiveEntryInfo() then
 		return
 	end
@@ -32,9 +32,19 @@ function LookingForGroup.accepted(name,search,create,secure,raid,keyword,ty_pe,c
 	if (secure <= 0 and profile.disable_auto) or is_queueing_lfg() or LookingForGroup.auto_is_running then
 		return true
 	end
-	if not LookingForGroup.IsLookingForGroupEnabled() then
+	if tb.disablelfg then
 		return
 	end
+	local name = tb.name
+	local search = tb.search
+	local create = tb.create
+	local secure = tb.secure
+	local raid = tb.raid
+	local keyword = tb.keyword
+	local ty_pe = tb.ty_pe
+	local create_only = tb.create_only
+	local composition = tb.composition
+	local warmode_ignore = tb.warmode_ignore
 
 	local delta = profile.hardware and -1 or 0
 	local current = coroutine.running()
@@ -491,8 +501,19 @@ function LookingForGroup.accepted(name,search,create,secure,raid,keyword,ty_pe,c
 	end
 end
 
+local function get_in_range_information(in_range)
+	if in_range == true then
+		return true
+	end
+	if not in_range then
+		return false
+	end
+	return in_range()
+end
 
-function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,composition)
+function LookingForGroup.autoloop(tb)
+	local name,create,raid,keyword,ty_pe,in_range,disablelfg
+	= tb.name, tb.create, tb.raid, tb.keyword, tb.ty_pe, tb.in_range, tb.disablelfg
 	Auto:SendMessage("LFG_AUTO_MAIN_LOOP",keyword)
 	LookingForGroup.auto_is_running = name
 	local current = coroutine.running()
@@ -501,7 +522,7 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 		LookingForGroup.resume(current,...)
 	end
 	Auto:UnregisterEvent("GROUP_ROSTER_UPDATE")
-	local lfg_enabled = LookingForGroup.IsLookingForGroupEnabled()
+	local lfg_enabled = not disablelfg
 	if lfg_enabled then
 		Auto:RegisterEvent("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS",event_func)
 	end
@@ -510,9 +531,9 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 		if ticker then
 			ticker:Cancel()
 		end
-		if profile.auto_kick then
+		if profile.auto_kick and in_range then
 			ticker = C_Timer.NewTicker(1,function()
-				event_func(13)
+				event_func(19)
 			end)
 		end
 	end
@@ -526,7 +547,7 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 	local player_list
 	local invited_tb = {}
 	local has_set_friends
-	if not profile.auto_addons_wqt and in_range then
+	if not profile.auto_addons_wqt then
 		Auto:RegisterEvent("CHAT_MSG_SYSTEM",event_func)
 		UIParent:UnregisterEvent("GROUP_INVITE_CONFIRMATION")
 		Auto:RegisterEvent("GROUP_INVITE_CONFIRMATION",event_func)
@@ -734,6 +755,16 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 				end
 			end
 		elseif k == 19 or k == 20 then
+			if not IsInGroup() then
+				break
+			end
+			if not get_in_range_information(in_range) then
+				if ticker then
+					ticker:Cancel()
+					ticker = nil
+				end
+				break
+			end
 			local UnitDistanceSquared = UnitDistanceSquared
 			local UnitIsUnit = UnitIsUnit
 			local UnitExists = UnitExists
@@ -811,7 +842,7 @@ function LookingForGroup.autoloop(name,create,raid,keyword,ty_pe,in_range,compos
 			local firstInvite = GetNextPendingInviteConfirmation()
 			if firstInvite then
 				local confirmationType, name, guid, rolesInvalid, willConvertToRaid = GetInviteConfirmationInfo(firstInvite)
-				if remain_group_spaces()~=0 and confirmationType == LE_INVITE_CONFIRMATION_REQUEST and invited_tb[name] == true then
+				if remain_group_spaces()~=0 and confirmationType == 1 and invited_tb[name] == true then
 					RespondToInviteConfirmation(firstInvite, true)
 				else
 					RespondToInviteConfirmation(firstInvite, false)
