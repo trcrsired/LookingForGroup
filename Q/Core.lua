@@ -256,7 +256,7 @@ local function is_group_q(id,ignore)
 		or (56006<=id and id <= 56022 and id~= 56012 and id~=56017) -- 8.2 Runelocked Chest
 		or (56023<=id and id <= 56025) -- 8.2 Laylocked Chest
 		or (65402<=id and id <= 65417) -- 9.2 Puzzling Quests
-		or (70415<=id and id <= 70436) -- 10.0 Dragonrider Racing 
+		or (70410<=id and id <= 70436 and id~=70414 ) -- 10.0 Dragonrider Racing 
 		then return
 	end
 	if profile.q[id] then
