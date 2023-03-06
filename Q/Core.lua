@@ -124,7 +124,8 @@ local function cofunc(quest_id,secure,gp)
 		else
 			return true
 		end
-	end
+	end,
+	ty_pe = gp
 	}
 	if LookingForGroup.IsLookingForGroupEnabled() then
 		local activityID = C_LFGList.GetActivityIDForQuestID(quest_id)
