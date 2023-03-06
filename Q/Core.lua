@@ -212,6 +212,27 @@ local function cofunc(quest_id,secure,gp)
 	LookingForGroup_Q:RegisterEvent("QUEST_WATCH_UPDATE","QUEST_ACCEPTED")
 end
 
+local available_quest_tag_tb =
+{
+[1] = true,  --Group
+[21] = true, --Class
+[41] = true, --PVP
+[104] = true, --Side Quest
+[107] = true, --Artifact
+[109] = true, --World Quest
+[110] = true, --Epic World Quest
+[111] = true, --Elite World Quest
+[112] = true, --Epic Elite World Quest
+[113] = true, --PvP World Quest
+[135] = true, --Rare World Quest
+[136] = true, --Rare Elite World Quest
+[142] = true, --Legion Invasion Elite World Quest
+[144] = true, --Legionfall World Quest
+[146] = true, --Legion Invasion World Quest Wrapper
+}
+
+LookingForGroup.lfgq_available_quest_tag_tb = available_quest_tag_tb
+
 local function is_group_q(id,ignore)
 	if id == nil or IsRestrictedAccount() then
 		return
@@ -247,13 +268,14 @@ local function is_group_q(id,ignore)
 		return
 	end
 	local tagID,wq_type = quest_tb.tagID,quest_tb.worldQuestType
-	if tagID == 62 or tagID == 81 or tagID == 83 or tagID == 117 or tagID == 124 or tagID == 125 or tagID == 147 or tagID == 148 or tagID == 256 or tagID == 255 or tagID == 265 or tagID == 266 or tagID == 268 or tagID ==271 then
+	if tagID and not available_quest_tag_tb[tagID] then
 		return
 	end
 	if profile.auto_wq_only and wq_type == nil then
 		return
 	end
-	if profile.auto_ccqg and not C_LFGList.CanCreateQuestGroup(id) then
+	local C_LFGList_CanCreateQuestGroup = C_LFGList.CanCreateQuestGroup
+	if profile.auto_ccqg and (not C_LFGList_CanCreateQuestGroup or not C_LFGList.CanCreateQuestGroup(id)) then
 		return
 	end
 	local QuestTagType = Enum.QuestTagType

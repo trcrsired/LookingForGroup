@@ -356,6 +356,9 @@ function LookingForGroup.IsLookingForGroupEnabled()
 	if lfggroupenabled then
 		return lfggroupenabled()
 	end
+	if IsRestrictedAccount() then
+		return false
+	end
 	if UnitLevel("player") + 10 < GetMaxLevelForLatestExpansion() then
 		return false
 	end
