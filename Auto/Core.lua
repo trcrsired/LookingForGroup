@@ -29,7 +29,7 @@ function LookingForGroup.accepted(tb)
 	end
 
 	local profile = LookingForGroup.db.profile
-	if (secure <= 0 and profile.disable_auto) or is_queueing_lfg() or LookingForGroup.auto_is_running then
+	if (tb.secure <= 0 and profile.disable_auto) or is_queueing_lfg() or LookingForGroup.auto_is_running then
 		return true
 	end
 	if tb.disablelfg then
