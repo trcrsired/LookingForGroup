@@ -145,10 +145,9 @@ local function hop()
 	if not LookingForGroup.IsLookingForGroupEnabled() then
 		return
 	end
---	local activities = C_LFGList.GetAvailableActivities()
---	local C_LFGList_GetActivityInfoExpensive = C_LFGList.GetActivityInfoExpensive
+	local activities = C_LFGList.GetAvailableActivities()
+	local C_LFGList_GetActivityInfoExpensive = C_LFGList.GetActivityInfoExpensive
 
---[[
 	local activity_id
 	for i=1,#activities do
 		if C_LFGList_GetActivityInfoExpensive(activities[i]) then
@@ -157,14 +156,8 @@ local function hop()
 		end
 	end
 	if activity_id == nil then
-		return
+		activity_id = 16
 	end
-]]
-
---	if activity_id == 1062 then
---	end
-
-	local activity_id = 16
 
 	local activityinfo_tb = C_LFGList.GetActivityInfoTable(activity_id)
 	local function search()

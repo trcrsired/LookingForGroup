@@ -125,7 +125,8 @@ local function cofunc(quest_id,secure,gp)
 			return true
 		end
 	end,
-	ty_pe = gp
+	ty_pe = "<LFG>Q",
+	create_only = gp
 	}
 	if LookingForGroup.IsLookingForGroupEnabled() then
 		local activityID = C_LFGList.GetActivityIDForQuestID(quest_id)
@@ -163,10 +164,11 @@ local function cofunc(quest_id,secure,gp)
 			end
 			return LookingForGroup.Search(categoryID,filters,0)
 		end
-		acceptedtb.confirm_keyword = confirm_keyword
+		acceptedtb.keyword = confirm_keyword
 	else
-		acceptedtb.confirm_keyword = tostring(quest_id)
+		acceptedtb.keyword = tostring(quest_id)
 		acceptedtb.create = nop
+		acceptedtb.search = nop
 	end
 	local quest_tag_tb = get_quest_tag_info(quest_id)
 	acceptedtb.raid = quest_tag_tb and quest_tag_tb.quality == 2

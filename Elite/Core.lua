@@ -36,7 +36,7 @@ local function cofunc(npc_id,name,guid)
 	create = nop,
 	search = nop,
 	secure = 0,
-	confirm_keyword = "<LFG>Elite"..npc_id,
+	keyword = "<LFG>Elite"..npc_id,
 	in_range = true}
 	if LookingForGroup.IsLookingForGroupEnabled() then
 		local activityID

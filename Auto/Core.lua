@@ -29,7 +29,8 @@ function LookingForGroup.accepted(tb)
 	end
 
 	local profile = LookingForGroup.db.profile
-	if (tb.secure <= 0 and profile.disable_auto) or is_queueing_lfg() or LookingForGroup.auto_is_running then
+	local secure = tb.secure
+	if (secure <= 0 and profile.disable_auto) or is_queueing_lfg() or LookingForGroup.auto_is_running then
 		return true
 	end
 	if tb.disablelfg then
@@ -38,7 +39,6 @@ function LookingForGroup.accepted(tb)
 	local name = tb.name
 	local search = tb.search
 	local create = tb.create
-	local secure = tb.secure
 	local raid = tb.raid
 	local keyword = tb.keyword
 	local ty_pe = tb.ty_pe
