@@ -103,7 +103,12 @@ function LookingForGroup_Elite:PLAYER_TARGET_CHANGED()
 					if GetInfo then
 						n = C_QuestLog.GetNumQuestLogEntries()
 						while i<=n do
-							local title = C_QuestLog.GetQuestLogTitle(i)
+							local title
+							if GetQuestLogTitle then
+								title = GetQuestLogTitle(i)
+							else
+								title = C_QuestLog.GetInfo(i).title
+							end
 							if title and title:find(name) then
 								break
 							end
