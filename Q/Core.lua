@@ -169,6 +169,7 @@ local function cofunc(quest_id,secure,gp)
 		acceptedtb.keyword = tostring(quest_id)
 		acceptedtb.create = nop
 		acceptedtb.search = nop
+		acceptedtb.disablelfg = true
 	end
 	local quest_tag_tb = get_quest_tag_info(quest_id)
 	acceptedtb.raid = quest_tag_tb and quest_tag_tb.quality == 2
