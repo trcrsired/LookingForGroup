@@ -10,6 +10,16 @@ if settings == nil then
 	opt_not_enabled = true
 	settings = LookingForGroup_Options.option_table
 end
+
+local rswidth,rsheight
+if GetCurrentScaledResolution then
+rswidth,rsheight=GetCurrentScaledResolution()
+else
+rswidth,rsheight = GetCVar("gxFullscreenResolution"):match("(%d+)x(%d+)")
+rswidth = tonumber(rswidth)
+rsheight = tonumber(rsheight)
+end
+
 settings.args =
 {
 	disable_blizzard =
@@ -110,7 +120,7 @@ settings.args =
 			{
 				name = COMPACT_UNIT_FRAME_PROFILE_FRAMEHEIGHT,
 				type = "range",
-				max = tonumber(GetCVar("gxFullscreenResolution"):match("%d+x(%d+)")),
+				max = rsheight,
 				step = 0.01,
 				get = function()
 					local v = (LibStub("AceConfigDialog-3.0"):GetStatusTable("LookingForGroup")).height
@@ -133,7 +143,7 @@ settings.args =
 			{
 				name = COMPACT_UNIT_FRAME_PROFILE_FRAMEWIDTH,
 				type = "range",
-				max = tonumber(GetCVar("gxFullscreenResolution"):match("(%d+)x%d+")),
+				max = rswidth,
 				step = 0.01,
 				get = function(info)
 					local v = (LibStub("AceConfigDialog-3.0"):GetStatusTable("LookingForGroup")).width
@@ -157,7 +167,7 @@ settings.args =
 				name = "LEFT",
 				type = "range",
 				min = -1,
-				max = tonumber(GetCVar("gxFullscreenResolution"):match("%d+x(%d+)")),
+				max = rswidth,
 				step = 0.01,
 				get = function()
 					local v = (LibStub("AceConfigDialog-3.0"):GetStatusTable("LookingForGroup")).left
@@ -181,7 +191,7 @@ settings.args =
 				name = "TOP",
 				type = "range",
 				min = -1,
-				max = tonumber(GetCVar("gxFullscreenResolution"):match("(%d+)x%d+")),
+				max = rsheight,
 				step = 0.01,
 				get = function(info)
 					local v = (LibStub("AceConfigDialog-3.0"):GetStatusTable("LookingForGroup")).top
