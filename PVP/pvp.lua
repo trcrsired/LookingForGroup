@@ -27,7 +27,7 @@ local function factory(Type,framename,func,challenges)
 					local value = 185
 					HonorInset:SetPoint("TOPRIGHT",self,"TOPRIGHT",value,-25)
 					HonorInset:SetPoint("BOTTOMRIGHT",self,"BOTTOMRIGHT",value,-25)
-					PVPQueueFrame.selection = self
+--					PVPQueueFrame.selection = self
 					if self==ConquestFrame then
 						HonorInset:DisplayRatedPanel()
 					else
