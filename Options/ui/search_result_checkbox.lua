@@ -61,7 +61,7 @@ end
 LookingForGroup_Options:RegisterMessage("UpdateArmory",update_armory_menu)
 
 local function fake_achievement_link(id,b)
-	local concat_tb = {"\124cffffff00\124Hachievement:",id,":",string.gsub(UnitGUID("player"), '0x', ''),":1:"}	
+	local concat_tb = {"\124cffffff00\124Hachievement:",id,":",string.gsub(UnitGUID("player"), '0x', ''),":1:"}
 	local time_tb = date("*t",time()-691200)
 	local d,m,y = time_tb.day,time_tb.month,math.fmod(time_tb.year,100)
 	if b then
@@ -85,7 +85,7 @@ end
 
 local function raid_achievement(ce,aotc,from,n)
 	if ce and aotc == nil then
-		aotc = ce - 1
+		aotc = ce
 	end
 	local GetAchievementInfo = GetAchievementInfo
 	if select(14,GetAchievementInfo(ce)) then	-- Cutting Edge
@@ -187,12 +187,12 @@ local function GetSearchEntryMenu(resultID)
 					local leaderName = info.leaderName
 					local activityID = info.activityID
 					if leaderName then
-						if activityID == 743 or activityID == 744 then -- Sanctum of Domination N/H
-							SendChatMessage(raid_achievement(15135,15134),"WHISPER",nil,leaderName)
+						if activityID == 1189 or activityID == 1190 then -- Vault of the Incarnates N/H
+							SendChatMessage(raid_achievement(17108,17107),"WHISPER",nil,leaderName)
 						end
 
-						if activityID == 745 then -- Sanctum of Domination Mythic
-							SendChatMessage(raid_achievement(15135),"WHISPER",nil,leaderName)
+						if activityID == 1191 then -- Vault of the Incarnates H
+							SendChatMessage(raid_achievement(17108),"WHISPER",nil,leaderName)
 						end
 
 						if activityID == 6 then -- 2 Bots vs 2 Bots
