@@ -45,7 +45,7 @@ local function region_name()
 	end
 end
 
-local function battlenetarmorycommon(achievements)
+local function battlenetarmorycommon(playername,achievements)
 	local name,realm = LookingForGroup_Options.player_armory_name(playername)
 	local region = GetCurrentRegion()
 	local regionurlprefix
