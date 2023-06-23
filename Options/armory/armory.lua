@@ -45,43 +45,59 @@ local function region_name()
 	end
 end
 
+local function battlenetarmorycommon(achievements)
+	local name,realm = LookingForGroup_Options.player_armory_name(playername)
+	local region = GetCurrentRegion()
+	local regionurlprefix
+	local regionurlsuffix
+	if region == 2 then
+		regionurlprefix = "https://worldofwarcraft.com/ko-kr/character/"
+		regionurlsuffix = "classic-kr"
+	elseif region == 3 then
+		regionurlprefix = "https://worldofwarcraft.com/en-gb/character/"
+		regionurlsuffix = "classic-eu"
+	elseif region == 4 then
+		regionurlprefix = "https://worldofwarcraft.com/zh-tw/character/"
+		regionurlsuffix = "classic-tw"
+	elseif region == 5 then
+		regionurlprefix = "http://www.battlenet.com.cn/wow/zh/character/"
+		regionurlsuffix = "classic-zh"
+	else
+		regionurlprefix = "https://worldofwarcraft.com/en-us/character/"
+		regionurlsuffix = "classic-us"
+	end
+	local rmtb = {regionurlprefix}
+	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+		rmtb[#rmtb+1] = regionurlsuffix
+	end
+	rmtb[#rmtb+1] = realm
+	rmtb[#rmtb+1] = "/"
+	rmtb[#rmtb+1] = name
+	if achievements then
+		rmtb[#rmtb+1] = "/achievements/feats-of-strength/raids"	
+	end
+	return table.concat(rmtb)
+end
+
 LookingForGroup_Options.armory =
 {
 	["Battle.net"] = function(playername)
-		local name,realm = LookingForGroup_Options.player_armory_name(playername)
-		local region = GetCurrentRegion()
-		if region == 1 then
-			return "https://worldofwarcraft.com/en-us/character/"..realm.."/"..name
-		elseif region == 2 then
-			return "https://worldofwarcraft.com/ko-kr/character/"..realm.."/"..name
-		elseif region == 3 then
-			return "https://worldofwarcraft.com/en-gb/character/"..realm.."/"..name
-		elseif region == 4 then
-			return "https://worldofwarcraft.com/zh-tw/character/"..realm.."/"..name
-		elseif region == 5 then
-			return "http://www.battlenet.com.cn/wow/zh/character/"..realm.."/"..name
-		end
+		return battlenetarmorycommon(playername)
 	end,
 	[_G.ACHIEVEMENTS] = function(playername)
-		local name,realm = LookingForGroup_Options.player_armory_name(playername)
-		local region = GetCurrentRegion()
-		if region == 1 then
-			return "https://worldofwarcraft.com/en-us/character/"..realm.."/"..name.."/achievements/feats-of-strength/raids"
-		elseif region == 2 then
-			return "https://worldofwarcraft.com/ko-kr/character/"..realm.."/"..name.."/achievements/feats-of-strength/raids"
-		elseif region == 3 then
-			return "https://worldofwarcraft.com/en-gb/character/"..realm.."/"..name.."/achievements/feats-of-strength/raids"
-		elseif region == 4 then
-			return "https://worldofwarcraft.com/zh-tw/character/"..realm.."/"..name.."/achievements/feats-of-strength/raids"
-		elseif region == 5 then
-			return "http://www.battlenet.com.cn/wow/zh/character/"..realm.."/"..name.."/achievements/feats-of-strength/raids"
-		end
+		return battlenetarmorycommon(playername,true)
 	end,
 	WarcraftLogs = function(playername)
 		local name,realm = LookingForGroup_Options.player_armory_name(playername)
 		local reg = region_name()
+		local versionstr
+		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+			versionstr = "https://www.warcraftlogs.com/character/"
+		else
+			versionstr = "https://classic.warcraftlogs.com/character/"
+		end
 		if reg then
-			return "https://www.warcraftlogs.com/character/"..reg.."/"..realm.."/"..name
+			return table.concat{versionstr,reg,"/",realm,"/",name}
 		end
 	end,	
 	["Ask Mr. Robot"] = function(playername)
@@ -103,6 +119,20 @@ LookingForGroup_Options.armory =
 		local reg = region_name()
 		if reg then
 			return "https://raider.io/characters/"..reg.."/"..realm.."/"..name
-		end	
+		end
+	end,
+	["Murlok.io PVP"] = function(playername)
+		local name,realm = LookingForGroup_Options.player_armory_name(playername)
+		local reg = region_name()
+		if reg then
+			return table.concat{"https://murlok.io/character/",reg,"/",string.lower(realm),"/",string.lower(name),"/pvp"}
+		end
+	end,
+	["Murlok.io PVE"] = function(playername)
+		local name,realm = LookingForGroup_Options.player_armory_name(playername)
+		local reg = region_name()
+		if reg then
+			return table.concat{"https://murlok.io/character/",reg,"/",string.lower(realm),"/",string.lower(name),"/pve"}
+		end
 	end,
 }
