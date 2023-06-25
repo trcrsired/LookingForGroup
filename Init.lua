@@ -332,7 +332,7 @@ end
 
 function LookingForGroup.lfglist_apis(LFGList)
 	if LFGList == C_LFGList or LFGList == nil then
-		LFGList = {}	
+		LFGList = {}
 	end
 	for k,v in pairs(C_LFGList) do
 		if LFGList[k] == nil then
