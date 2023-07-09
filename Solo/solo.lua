@@ -1,5 +1,6 @@
 local LookingForGroup = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup")
 local LookingForGroup_Options = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup_Options")
+local L = LibStub("AceLocale-3.0"):GetLocale("LookingForGroup")
 
 function LookingForGroup_Options.hardware_solo_create(instance_leave)
 	if LookingForGroup.db.profile.hardware then
@@ -66,6 +67,17 @@ LookingForGroup_Options:push("solo",
 				end
 			end,
 			order = 2,
+		},
+		leave_adventure_journal =
+		{
+			name = L["Abandon Tutorial Area"],
+			desc = "C_Tutorial.AbandonTutorialArea()",
+			type = "execute",
+			func = function()
+				C_Tutorial.AbandonTutorialArea()
+			end,
+			order = 3,
+			confirm = true
 		},
 		cvtr =
 		{
