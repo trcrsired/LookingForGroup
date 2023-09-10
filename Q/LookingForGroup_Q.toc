@@ -1,4 +1,4 @@
-## Interface: 100010
+## Interface: 100017
 ## Author: cqwrteur
 ## Title: LookingForGroup Quest
 ## LoadOnDemand: 1
