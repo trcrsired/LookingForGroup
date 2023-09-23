@@ -6,14 +6,28 @@ LFG_OPT.mythic_keystone = activity_infotb.fullName:sub(C_LFGList.GetActivityGrou
 local label_name = activity_infotb.shortName
 LFG_OPT.mythic_keystone_label_name = label_name
 
-LFG_OPT.RegisterSimpleFilter("find",function(info)
+LFG_OPT.RegisterSimpleFilter("find",function(info,profile,val)
 	local info_tb = C_LFGList.GetActivityInfoTable(info.activityID)
-	if info_tb.shortName ~= label_name then
-		return 1
+	local shortname = info_tb.shortName
+	if val == 1 then
+		if shortname ~= label_name then
+			return 1
+		end
+	else
+		if shortname == label_name then
+			return 1
+		end
 	end
 end,function(profile)
 	local a = profile.a
-	return a.category == 2 and profile.mplus
+	if a.category == 2 then
+		local mplus = profile.mplus
+		if mplus then
+			return 1
+		elseif mplus == false then
+			return 0
+		end
+	end
 end)
 
 LFG_OPT.Register("category_callbacks",nil,{function(find_args,f_args,s_args)
@@ -21,8 +35,27 @@ LFG_OPT.Register("category_callbacks",nil,{function(find_args,f_args,s_args)
 	{
 		name = label_name,
 		type = "toggle",
-		get = LFG_OPT.options_get_function,
-		set = LFG_OPT.options_set_function
+		get = function(info)
+			local v = LFG_OPT.db.profile.mplus
+			if v then
+				return true
+			elseif v == false then
+				return
+			else
+				return false
+			end
+		end,
+		set = function(info,val)
+			if val then
+				val = true
+			elseif val == nil then
+				val = false
+			else
+				val = nil
+			end
+			LFG_OPT.db.profile.mplus = val
+		end,
+		tristate = true,
 	}
 	f_args.dungeonscoremin =
 	{
