@@ -389,7 +389,8 @@ LFG_OPT:push("m+",{
 })
 
 LFG_OPT.Register("mplus_callbacks",nil,function(profile,a,s)
-	s.minimum_item_level = GetAverageItemLevel()-4
+	local avgItemLevel, avgItemLevelEquipped, avgItemLevelPvp = GetAverageItemLevel()
+--	s.minimum_item_level = avgItemLevelEquipped-10
 	s.role = true
 	s.diverse = true
 	s.mplus_elitist_level = C_MythicPlus.GetOwnedKeystoneLevel() + 1
