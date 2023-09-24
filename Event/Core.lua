@@ -128,7 +128,7 @@ end
 function Event.show_invite_dialog(resultID)
 	local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID);
 	local activityName = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID).fullName;
-	
+
 	local concat_tb = {}
 	local member_counts = C_LFGList.GetSearchResultMemberCounts(resultID)
 	concat_tb[#concat_tb+1] = activityName
@@ -151,13 +151,18 @@ function Event.show_invite_dialog(resultID)
 	LFGListInviteDialog.ActivityName:SetText(table.concat(concat_tb));
 	wipe(concat_tb)
 	local applicationid, status, pending, appduration, role = C_LFGList.GetApplicationInfo(resultID);
+	local informational = (status ~= "invited");
+
 	LFGListInviteDialog.Role:SetText(_G[role]);
+--[[
 	if ElvUI then
 		LFGListInviteDialog.RoleIcon:SetTexCoord(GetBackgroundTexCoordsForRole(role));
 	else
 		LFGListInviteDialog.RoleIcon:SetTexCoord(GetTexCoordsForRole(role));
 	end
-	LFGListInviteDialog.Label:SetText(LFG_LIST_INVITED_TO_GROUP);
+]]
+	LFGListInviteDialog.RoleIcon:SetAtlas(GetIconForRole(role, false), TextureKitConstants.IgnoreAtlasSize)
+	LFGListInviteDialog.Label:SetText(informational and LFG_LIST_JOINED_GROUP_NOTICE or LFG_LIST_INVITED_TO_GROUP);
 	LFGListInviteDialog.AcceptButton:SetShown(true);
 	LFGListInviteDialog.DeclineButton:SetShown(true);
 	LFGListInviteDialog.AcknowledgeButton:SetShown(false);
