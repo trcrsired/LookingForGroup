@@ -73,8 +73,10 @@ local function battlenetarmorycommon(playername,achievements)
 	rmtb[#rmtb+1] = realm
 	rmtb[#rmtb+1] = "/"
 	rmtb[#rmtb+1] = name
-	if achievements then
-		rmtb[#rmtb+1] = "/achievements/feats-of-strength/raids"	
+	if achievements == 1 then
+		rmtb[#rmtb+1] = "/achievements/feats-of-strength/raids"
+	elseif achievements == 2 then
+		rmtb[#rmtb+1] = "/pve/raids"
 	end
 	return table.concat(rmtb)
 end
@@ -85,7 +87,10 @@ LookingForGroup_Options.armory =
 		return battlenetarmorycommon(playername)
 	end,
 	[_G.ACHIEVEMENTS] = function(playername)
-		return battlenetarmorycommon(playername,true)
+		return battlenetarmorycommon(playername,1)
+	end,
+	[_G.RAID] = function(playername)
+		return battlenetarmorycommon(playername,2)
 	end,
 	WarcraftLogs = function(playername)
 		local name,realm = LookingForGroup_Options.player_armory_name(playername)
