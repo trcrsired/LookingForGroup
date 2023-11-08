@@ -1,4 +1,4 @@
-## Interface: 100017
+## Interface: 100020
 ## Author: cqwrteur
 ## Title: LookingForGroup Solo
 ## Dependencies: LookingForGroup_Options
