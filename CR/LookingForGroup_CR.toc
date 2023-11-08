@@ -1,4 +1,4 @@
-## Interface: 100020
+## Interface: 100200
 ## Author: cqwrteur
 ## Title: LookingForGroup Cross Realm
 ## LoadOnDemand: 1
