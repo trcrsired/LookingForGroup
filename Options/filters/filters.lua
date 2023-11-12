@@ -335,6 +335,7 @@ function LookingForGroup_Options.do_auto_accept(LFGList,filters,entryinfo,app_in
 			total_players = need_dps - dps_count + total_players
 		end
 	end]]
+	local C_PartyInfo_InviteUnit = LFGList.InviteUnit or C_PartyInfo.InviteUnit
 	for i=1,#app_applied do
 		if maxNumPlayers ~=0 and total_players >= maxNumPlayers then
 			break
@@ -347,7 +348,7 @@ function LookingForGroup_Options.do_auto_accept(LFGList,filters,entryinfo,app_in
 					LFGList.InviteApplicant(info.applicantID)
 				else
 					local name = LFGList.GetApplicantMemberInfo(info.applicantID,1)
-					numMembers.C_PartyInfo_InviteUnit(name)
+					C_PartyInfo_InviteUnit(name)
 				end
 				total_players = total_players + total_players
 			end
