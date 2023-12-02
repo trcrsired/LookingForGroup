@@ -117,6 +117,10 @@ LFG_OPT:push("m+",{
 					LFG_OPT.expected(disable_text)
 					return
 				end
+				if activityID == 1250 then
+					activityID = 1247
+					groupID = 316
+				end
 				local mapid_fix = C_MythicPlus.GetOwnedKeystoneChallengeMapID()
 				if mapid_fix == 392 then
 					activityID = 1017
