@@ -117,10 +117,6 @@ LFG_OPT:push("m+",{
 					LFG_OPT.expected(disable_text)
 					return
 				end
-				if activityID == 1250 then
-					activityID = 1247
-					groupID = 316
-				end
 				local mapid_fix = C_MythicPlus.GetOwnedKeystoneChallengeMapID()
 				if mapid_fix == 392 then
 					activityID = 1017
@@ -132,6 +128,10 @@ LFG_OPT:push("m+",{
 				local hw = LFGListFrame.EntryCreation.Name:GetText() == "+"..key_level_number
 				if not hw then
 					C_LFGList.SetEntryTitle(activityID,groupID)
+				end
+				if activityID == 1250 then
+					activityID = 1247
+					groupID = 316
 				end
 				local function callback()
 					local activity_infotb = C_LFGList.GetActivityInfoTable(activityID)
