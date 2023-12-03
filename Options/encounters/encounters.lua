@@ -138,12 +138,13 @@ LookingForGroup_Options.option_table.args.find.args.f.args.encounters =
 				end
 				local activity_infotb = C_LFGList.GetActivityInfoTable(activity)
 				local fullname,shortname = activity_infotb.fullName,activity_infotb.shortName
+				local groupnm = C_LFGList.GetActivityGroupInfo(activity_infotb.groupFinderActivityGroupID)
 				local num = GetNumSavedInstances()
 				local GetSavedInstanceInfo = GetSavedInstanceInfo
 				local string_find = string.find
 				for i=1,num do
 					local instanceName, instanceID, _, instanceDifficulty, locked, _, instanceIDMostSig, isRaid, maxPlayers, difficultyName, maxBosses = GetSavedInstanceInfo(i)
-					if fullname:find(instanceName) and difficultyName == shortname then
+					if groupnm == instanceName and difficultyName == shortname then
 						local t = {}
 						for j = 1, maxBosses do
 							local bossName, fileDataID, isKilled, unknown4 = GetSavedInstanceEncounterInfo(i,j)
