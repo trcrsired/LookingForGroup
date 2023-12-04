@@ -48,18 +48,46 @@ local function get_get_set_tb(tb,parameters)
 	return t
 end
 
-local function generate_get_set(tb,parameters)
+local function generate_get_set(tb,parameters,tristate)
 	if parameters == nil then
 		parameters = {"db","profile"}
 	end
-	local function get(info)
-		return get_get_set_tb(tb,parameters)[info[#info]]
+	local get
+	if tristate then
+		get = function(info)
+			local v = get_get_set_tb(tb,parameters)[info[#info]]
+			if v then
+				return true
+			elseif v == nil then
+				return false
+			else
+				return
+			end
+		end
+	else
+		get = function(info)
+			return get_get_set_tb(tb,parameters)[info[#info]]
+		end
 	end
-	local function set(info,val)
-		if val then
-			get_get_set_tb(tb,parameters)[info[#info]]=true
-		else
-			get_get_set_tb(tb,parameters)[info[#info]]=nil
+	local set
+	if tristate then
+		set = function(info,val)
+			if val then
+				get_get_set_tb(tb,parameters)[info[#info]]=true
+			elseif val == nil then
+				get_get_set_tb(tb,parameters)[info[#info]]=false
+			else
+				get_get_set_tb(tb,parameters)[info[#info]]=nil
+			end
+		end
+
+	else
+		set = function(info,val)
+			if val then
+				get_get_set_tb(tb,parameters)[info[#info]]=true
+			else
+				get_get_set_tb(tb,parameters)[info[#info]]=nil
+			end
 		end
 	end
 	return get,set,function(info) return not get(info) end,function(info,val) set(info,not val) end
@@ -72,6 +100,9 @@ LookingForGroup_Options.options_get_function,LookingForGroup_Options.options_set
 LookingForGroup_Options.options_get_a_function,LookingForGroup_Options.options_set_a_function,LookingForGroup_Options.options_get_a_function_negative,LookingForGroup_Options.options_set_a_function_negative=generate_get_set(LookingForGroup_Options,{"db","profile","a"})
 
 LookingForGroup_Options.options_get_s_function,LookingForGroup_Options.options_set_s_function,LookingForGroup_Options.options_get_s_function_negative,LookingForGroup_Options.options_set_s_function_negative=generate_get_set(LookingForGroup_Options,{"db","profile","s"})
+
+LookingForGroup_Options.options_get_tristate_function,LookingForGroup_Options.options_set_tristate_function = generate_get_set(LookingForGroup_Options,nil, true)
+
 
 function LookingForGroup_Options.IsSelected(groupname)
 	local status_table = LibStub("AceConfigDialog-3.0"):GetStatusTable("LookingForGroup")
