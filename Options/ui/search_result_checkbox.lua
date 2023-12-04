@@ -717,7 +717,7 @@ function LookingForGroup_Options.search_result_tooltip_coroutine(frame,id,detail
 					GameTooltip:AddLine(comment,0.5,0.5,0.8,true)
 				end
 			end
-			cache=LookingForGroup_Options.handle_encounters(C_LFGList.GetSearchResultEncounterInfo(id),cache,info,activity_infotb.groupFinderActivityID,activity_infotb.categoryID,activity_infotb.shortName)
+			cache=LookingForGroup_Options.handle_encounters(C_LFGList.GetSearchResultEncounterInfo(id),cache,info,activity_infotb.groupFinderActivityGroupID,activity_infotb.categoryID,activity_infotb.shortName)
 			local friendlist = LFGListSearchEntryUtil_GetFriendList(id)
 			if friendlist:len()~=0 then
 				GameTooltip:AddLine(" ")
