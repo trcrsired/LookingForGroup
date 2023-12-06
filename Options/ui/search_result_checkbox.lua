@@ -2,7 +2,7 @@ local AceGUI = LibStub("AceGUI-3.0")
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local LookingForGroup = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup")
 local LookingForGroup_Options = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup_Options")
-
+local table_concat = table.concat
 
 local L = LibStub("AceLocale-3.0"):GetLocale("LookingForGroup")
 
@@ -337,7 +337,7 @@ local function add_role(tbl,icon,n)
 					GameTooltip:AddDoubleLine(GetClassInfo(i),v,color.r,color.g,color.b,color.r,color.g,color.b)
 				end
 			end
-		end		
+		end
 	end
 end
 
@@ -717,6 +717,20 @@ function LookingForGroup_Options.search_result_tooltip_coroutine(frame,id,detail
 					GameTooltip:AddLine(comment,0.5,0.5,0.8,true)
 				end
 			end
+			LookingForGroup_Options.tooltip_show_dungeonscore_info(info.leaderDungeonScoreInfo)
+			LookingForGroup_Options.tooltip_show_pvp_rating_info(info.leaderPvpRatingInfo)
+			local numMembers = info.numMembers
+			local tank,healer,damager,tank_tb,healer_tb,damager_tb = LookingForGroup_Options.init_roles(id,numMembers)
+			wipe(concat_tb)
+			concat_tb[#concat_tb+1] = tank
+			concat_tb[#concat_tb+1] = "/"
+			concat_tb[#concat_tb+1] = healer
+			concat_tb[#concat_tb+1] = "/"
+			concat_tb[#concat_tb+1] = damager
+			GameTooltip:AddDoubleLine(table_concat(concat_tb),numMembers,nil,nil,nil,0.5,0.5,0.8)
+			add_role(tank_tb,"|T337497:16:16:0:0:64:64:0:19:22:41|t",tank)
+			add_role(healer_tb,"|T337497:16:16:0:0:64:64:20:39:1:20|t",healer)
+			add_role(damager_tb,"|T337497:16:16:0:0:64:64:20:39:22:41|t",damager)
 			cache=LookingForGroup_Options.handle_encounters(C_LFGList.GetSearchResultEncounterInfo(id),cache,info,activity_infotb.groupFinderActivityGroupID,activity_infotb.categoryID,activity_infotb.shortName)
 			local friendlist = LFGListSearchEntryUtil_GetFriendList(id)
 			if friendlist:len()~=0 then
@@ -727,8 +741,6 @@ function LookingForGroup_Options.search_result_tooltip_coroutine(frame,id,detail
 				GameTooltip:AddLine(" ")
 				GameTooltip:AddLine(LFG_LIST_ENTRY_DELISTED,1,0,0,true)
 			end
-			LookingForGroup_Options.tooltip_show_dungeonscore_info(info.leaderDungeonScoreInfo)
-			LookingForGroup_Options.tooltip_show_pvp_rating_info(info.leaderPvpRatingInfo)
 			add_application_info_tooltip(id)
 			GameTooltip:Show()
 		elseif yd == 2 then
@@ -761,7 +773,6 @@ AceGUI:RegisterWidgetType("LookingForGroup_search_result_checkbox", function()
 				else -- for both nil and false (tristate)
 					PlaySound(857)
 				end
-				
 				obj:Fire("OnValueChanged", obj.checked)
 			end
 			AlignImage(obj)
@@ -776,6 +787,6 @@ AceGUI:RegisterWidgetType("LookingForGroup_search_result_checkbox", function()
 		self.disabled = false
 		self.width = "fill"
 	end
-	check.type = "LookingForGroup_search_result_checkbox"	
+	check.type = "LookingForGroup_search_result_checkbox"
 	return AceGUI:RegisterAsWidget(check)
 end, 1)
