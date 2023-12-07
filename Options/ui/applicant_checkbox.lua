@@ -223,8 +223,13 @@ function LookingForGroup_Options.tooltip_show_pvp_rating_info(pvpRatingForEntry)
 	end
 end
 
+local player_faction_group = LookingForGroup_Options.player_faction_group
+local player_faction_colored_strings = LookingForGroup_Options.player_faction_colored_strings
+local C_CreatureInfo_GetRaceInfo = C_CreatureInfo.GetRaceInfo
+local PlayerUtil_GetSpecNameBySpecID = PlayerUtil.GetSpecNameBySpecID
+
 local function member_info(LFGList,id,i)
-	local name, class, localizedClass, level, itemLevel, honorLevel, tank, healer, damage, assignedRole, relationship, dunegeonScore, pvpItemLevel = LFGList.GetApplicantMemberInfo(id,i)
+	local name, class, localizedClass, level, itemLevel, honorLevel, tank, healer, damage, assignedRole, relationship, dungeonScore, pvpItemLevel, factionGroup, raceID, specID = LFGList.GetApplicantMemberInfo(id,i)
 	if i ~= 1 then
 		concat_tb[#concat_tb+1] = "\n"
 	end
@@ -254,12 +259,26 @@ local function member_info(LFGList,id,i)
 	if flag then
 		concat_tb[#concat_tb + 1] = flag
 	end
+	if raceID then
+		local raceinfo = C_CreatureInfo_GetRaceInfo(raceID)
+		concat_tb[#concat_tb+1] = " "
+		concat_tb[#concat_tb+1] = raceinfo.clientFileString
+	end
+	if specID then
+		local specName = PlayerUtil_GetSpecNameBySpecID(specID)
+		concat_tb[#concat_tb+1] = " "
+		concat_tb[#concat_tb+1] = specName
+	end
 	concat_tb[#concat_tb+1] = " "
 	concat_tb[#concat_tb+1] = localizedClass
 	concat_tb[#concat_tb+1] = "|r"
-	if dunegeonScore ~= 0 then
+	if factionGroup and player_faction_group[factionGroup] ~= UnitFactionGroup("player") then
+		concat_tb[#concat_tb+1] = " "
+		concat_tb[#concat_tb+1] = player_faction_colored_strings[factionGroup]
+	end
+	if dungeonScore ~= 0 then
 		concat_tb[#concat_tb+1] = " DS:"
-		concat_tb[#concat_tb+1] = dunegeonScore
+		concat_tb[#concat_tb+1] = dungeonScore
 	end
 	local roles = 0
 	if tank then
@@ -381,7 +400,7 @@ local function on_enter(self)
 		end
 	end
 	for i=1,applicantInfo.numMembers do
-		local name, class, localizedClass, level, itemLevel, honorLevel, tank, healer, damage, assignedRole, relationship, dunegeonScore, pvpItemLevel =
+		local name, class, localizedClass, level, itemLevel, honorLevel, tank, healer, damage, assignedRole, relationship, dunegeonScore, pvpItemLevel, factionGroup, raceID, specID =
 		GetApplicantMemberInfo(val,i)
 		local color = CLASS_COLORS[class]
 		GameTooltip:AddDoubleLine(name,i,color.r,color.g,color.b,0.5,0.5,0.8)
@@ -389,7 +408,7 @@ local function on_enter(self)
 		tooltip_show_pvp_rating_info(GetApplicantPvpRatingInfoForListing(val,i,activityID))
 		if tb then
 			for j=1,#tb do
-				tb[j](val, i, name, class, localizedClass, level, itemLevel, honorLevel, tank, healer, damage, assignedRole, relationship, dunegeonScore, pvpItemLevel)
+				tb[j](val, i, name, class, localizedClass, level, itemLevel, honorLevel, tank, healer, damage, assignedRole, relationship, dunegeonScore, pvpItemLevel, factionGroup, raceID, specID)
 			end
 		end
 	end

@@ -66,7 +66,7 @@ function LookingForGroup_Options.req_main(auto_accept,filters,back_list,LFGList,
 					end,
 					width = 0.667
 				},
-				delist = 
+				delist =
 				{
 					order = 2,
 					name = UNLIST_MY_GROUP,
@@ -85,11 +85,12 @@ function LookingForGroup_Options.req_main(auto_accept,filters,back_list,LFGList,
 					end,
 					set = function(_,val)
 						enable_filters = val
+						auto_accept = false
 						LookingForGroup_Options:SendMessage("LFG_APPLICANT_LIST_REFRESH")
 					end,
 					width = 0.667
 				},
-				autoaccept = auto_accept ~= 0 and 
+				autoaccept = auto_accept ~= 0 and
 				{
 					order = 4,
 					name = LFG_LIST_AUTO_ACCEPT,

@@ -200,7 +200,7 @@ LookingForGroup_Options:push("find",{
 				if LE_LFG_LIST_FILTER_NOT_RECOMMENDED == nil then
 					LE_LFG_LIST_FILTER_NOT_RECOMMENDED = Enum.LFGListFilter.NotRecommended
 				end
-				if bit.band(filters,LE_LFG_LIST_FILTER_RECOMMENDED) == LE_LFG_LIST_FILTER_NOT_RECOMMENDED then
+				if bit.band(filters,LE_LFG_LIST_FILTER_RECOMMENDED) == LE_LFG_LIST_FILTER_RECOMMENDED then
 					profile.recommended = nil
 				elseif bit.band(filters,LE_LFG_LIST_FILTER_NOT_RECOMMENDED) == LE_LFG_LIST_FILTER_NOT_RECOMMENDED then
 					profile.recommended = false

@@ -103,6 +103,13 @@ LookingForGroup_Options.options_get_s_function,LookingForGroup_Options.options_s
 
 LookingForGroup_Options.options_get_tristate_function,LookingForGroup_Options.options_set_tristate_function = generate_get_set(LookingForGroup_Options,nil, true)
 
+local player_faction_group = {[0]="Horde",[1]="Alliance",[2]="Neutral", Horde = 0, Alliance = 1, Neutral = 2}
+local player_faction_strings = { [0]=FACTION_HORDE, [1]=FACTION_ALLIANCE, [2]=FACTION_NEUTRAL}
+local player_faction_colored_strings = { [0]="|cffff0000"..FACTION_HORDE.."|r", [1]="|cff0000ff"..FACTION_ALLIANCE.."|r", [2]="|cff00ff00"..FACTION_NEUTRAL.."|r"}
+
+LookingForGroup_Options.player_faction_group = player_faction_group
+LookingForGroup_Options.player_faction_strings = player_faction_strings
+LookingForGroup_Options.player_faction_colored_strings = player_faction_colored_strings
 
 function LookingForGroup_Options.IsSelected(groupname)
 	local status_table = LibStub("AceConfigDialog-3.0"):GetStatusTable("LookingForGroup")

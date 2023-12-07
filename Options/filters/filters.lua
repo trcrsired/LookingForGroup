@@ -273,7 +273,10 @@ function LookingForGroup_Options.ExecuteFilter(bts,tb,results,filter_options,fir
 	return tb
 end
 
-function LookingForGroup_Options.do_auto_accept(LFGList,filters,entryinfo,app_invited,app_applied,app,ap)
+local UnitFactionGroup = UnitFactionGroup
+local player_faction_group = LookingForGroup_Options.player_faction_group
+
+function LookingForGroup_Options.do_auto_accept(LFGList,filters,entryinfo,app_invited,app_applied,app,ap,hardware_invited_tb)
 --	local autoaccept_to_invite_hash_tb = {}
 --	local auto_accept_filters = LookingForGroup_Options.auto_accept_filters
 
@@ -347,8 +350,21 @@ function LookingForGroup_Options.do_auto_accept(LFGList,filters,entryinfo,app_in
 				if nhp___InviteApplicant then
 					LFGList.InviteApplicant(info.applicantID)
 				else
-					local name = LFGList.GetApplicantMemberInfo(info.applicantID,1)
-					PartyInfo_InviteUnit(name)
+					local name, class, localizedClass, level, itemLevel, honorLevel, tank, healer, damage, assignedRole, relationship, dungeonScore, pvpItemLevel, factionGroup, raceID, specID = LFGList.GetApplicantMemberInfo(info.applicantID,1)
+					if name then
+						if not hardware_invited_tb[name] then
+							if profile.taskbar_flash then
+								FlashClientIcon()
+							end
+							if not profile.mute then
+								PlaySound(SOUNDKIT.RAID_WARNING)
+							end
+							if player_faction_group[factionGroup] == UnitFactionGroup("player") then
+								PartyInfo_InviteUnit(name)
+							end
+						end
+						hardware_invited_tb[name] = true
+					end
 				end
 				total_players = total_players + total_players
 			end
@@ -357,9 +373,6 @@ function LookingForGroup_Options.do_auto_accept(LFGList,filters,entryinfo,app_in
 	if maxNumPlayers ~=0 and total_players >= maxNumPlayers then
 		if profile.taskbar_flash  then
 			FlashClientIcon()
-		end
-		if not profile.mute then
-			PlaySound(SOUNDKIT.RAID_WARNING)
 		end
 	end
 end
