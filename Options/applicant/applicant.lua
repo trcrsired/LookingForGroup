@@ -161,7 +161,7 @@ function LookingForGroup_Options.req_main(auto_accept,filters,back_list,LFGList,
 	local hardware = profile.hardware
 	local yd,arg1,arg2 = "LFG_LIST_APPLICANT_UPDATED"
 	local concat = {}
-
+	local hardware_invited_tb = {}
 	local relist_timer
 	local cache = {}
 	while true do
@@ -261,7 +261,7 @@ function LookingForGroup_Options.req_main(auto_accept,filters,back_list,LFGList,
 				FlashClientIcon()
 			end
 			if not entryinfo.autoAccept and not LFGList.CanActiveEntryUseAutoAccept() and auto_accept then
-				local ok,error_msg = pcall(LookingForGroup_Options.do_auto_accept,LFGList,filters,entryinfo,app_invited,app_applied,app,ap)
+				local ok,error_msg = pcall(LookingForGroup_Options.do_auto_accept,LFGList,filters,entryinfo,app_invited,app_applied,app,ap,hardware_invited_tb)
 				if not ok then
 					LookingForGroup_Options.Paste(error_msg,nop)
 				end
