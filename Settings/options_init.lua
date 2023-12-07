@@ -111,6 +111,22 @@ LookingForGroup_Options.player_faction_group = player_faction_group
 LookingForGroup_Options.player_faction_strings = player_faction_strings
 LookingForGroup_Options.player_faction_colored_strings = player_faction_colored_strings
 
+local localizedSpecNameToIndex = {}
+local GetSpecializationInfoForClassID = GetSpecializationInfoForClassID
+LookingForGroup_Options.localizedSpecNameToIndex = localizedSpecNameToIndex
+
+for classID = 1, GetNumClasses() do
+	local lspectoicontb = localizedSpecNameToIndex[classID]
+	lspectoicontb = {}
+	localizedSpecNameToIndex[classID] = lspectoicontb
+	for specIndex = 1, 5 do
+		local specId, localizedSpecName, _, icon = GetSpecializationInfoForClassID(classID, specIndex)
+		if localizedSpecName then
+			lspectoicontb[localizedSpecName] = specIndex
+		end
+	end
+end
+
 function LookingForGroup_Options.IsSelected(groupname)
 	local status_table = LibStub("AceConfigDialog-3.0"):GetStatusTable("LookingForGroup")
 	if status_table.groups and status_table.groups.selected == groupname then

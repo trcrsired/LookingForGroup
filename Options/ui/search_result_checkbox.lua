@@ -322,13 +322,15 @@ end
 
 end
 
+local temp_spec_concat_tb={}
+
 local function add_role(tbl,icon,n)
 	if n ~= 0 then
 		GameTooltip:AddLine(" ")
 		GameTooltip:AddDoubleLine(icon,n,nil,nil,nil,0.5,0.5,0.8)
 		local GetClassInfo = GetClassInfo
 		for i=1,#tbl do
-			local v = tbl[i]
+			local v = tbl[i][1]
 			if v ~= 0 then
 				local color=classes[i]
 				if v == 1 then
@@ -336,52 +338,114 @@ local function add_role(tbl,icon,n)
 				else
 					GameTooltip:AddDoubleLine(GetClassInfo(i),v,color.r,color.g,color.b,color.r,color.g,color.b)
 				end
+				local tbl2 = tbl[i][2]
+				for specIndex,speccounts in pairs(tbl2) do
+					local _, name, _, icon = GetSpecializationInfoForClassID(i, specIndex)
+					wipe(temp_spec_concat_tb)
+					temp_spec_concat_tb[#temp_spec_concat_tb+1] = "|T"
+					temp_spec_concat_tb[#temp_spec_concat_tb+1] = icon
+					temp_spec_concat_tb[#temp_spec_concat_tb+1] = ":16:16:0:0|t"
+					temp_spec_concat_tb[#temp_spec_concat_tb+1] = name
+					local countstr = " "
+					if speccounts ~= 1 then
+						countstr = speccounts
+					end
+					GameTooltip:AddDoubleLine(table.concat(temp_spec_concat_tb),countstr,color.r,color.g,color.b,color.r,color.g,color.b)
+				end
 			end
 		end
 	end
 end
 
+local localizedSpecNameToIndex = LookingForGroup_Options.localizedSpecNameToIndex
+
 local function init_roles(id,numMembers)
 	local C_LFGList_GetSearchResultMemberInfo = C_LFGList.GetSearchResultMemberInfo
 	for i=1,GetNumClasses() do
-		tank_tb[i]=0
-		healer_tb[i]=0
-		damager_tb[i]=0
+		tank_tb[i]={0,{}}
+		healer_tb[i]={0,{}}
+		damager_tb[i]={0,{}}
 	end
 	local tank,healer,damager = 0,0,0
 	for i = 1, numMembers do
-		local role, class, class_localized = C_LFGList_GetSearchResultMemberInfo(id,i)
+		local role, class, class_localized, spec = C_LFGList_GetSearchResultMemberInfo(id,i)
 		local class_id = classes[class]
+		local specIndex = localizedSpecNameToIndex[class_id][spec]
 		if role == "TANK" then
-			tank_tb[class_id] = tank_tb[class_id] + 1
+			local tb = tank_tb[class_id]
+			if specIndex then
+				local tb2 = tb[2]
+				local st = tb2[specIndex]
+				if st == nil then
+					st = 0
+				end
+				st = st + 1
+				tb2[specIndex] = st
+			end
+			tb[1] = tb[1] + 1
 			tank = tank + 1
 		elseif role == "HEALER" then
-			healer_tb[class_id] = healer_tb[class_id] + 1
+			local tb = healer_tb[class_id]
+			if specIndex then
+				local tb2 = tb[2]
+				local st = tb2[specIndex]
+				if st == nil then
+					st = 0
+				end
+				st = st + 1
+				tb2[specIndex] = st
+			end
+			tb[1] = tb[1] + 1
 			healer = healer + 1
 		else
-			damager_tb[class_id] = damager_tb[class_id] + 1
+			local tb = damager_tb[class_id]
+			if specIndex then
+				local tb2 = tb[2]
+				local st = tb2[specIndex]
+				if st == nil then
+					st = 0
+				end
+				st = st + 1
+				tb2[specIndex] = st
+			end
+			tb[1] = tb[1] + 1
 			damager = damager + 1
 		end
 	end
 	return tank,healer,damager,tank_tb,healer_tb,damager_tb,classes
 end
 LookingForGroup_Options.init_roles = init_roles
+local GetSpecializationInfoForClassID = GetSpecializationInfoForClassID
 
-local function handle_title_role(concat_tb,number,tb,sign)
+local function handle_title_role(concat_tb,number,tb,sign,showspecnotclass)
 	if number ~= 0 then
 		for i=1,#tb do
-			local v = tb[i]
+			local v = tb[i][1]
 			if v ~= 0 then
 				concat_tb[#concat_tb + 1] = "|c"
 				concat_tb[#concat_tb + 1] = classes[i].colorStr
-				concat_tb[#concat_tb + 1] = sign
-				if v ~= 1 then
-					concat_tb[#concat_tb + 1] = v
+				if showspecnotclass then
+					local tb2 = tb[i][2]
+					for specIndex,speccounts in pairs(tb2) do
+						if speccounts ~= 0 then
+							local _, _, _, icon = GetSpecializationInfoForClassID(i, specIndex)
+							concat_tb[#concat_tb+1] = "|T"
+							concat_tb[#concat_tb+1] = icon
+							concat_tb[#concat_tb+1] = ":16:16:0:0|t"
+							if speccounts ~= 1 then
+								concat_tb[#concat_tb + 1] = speccounts
+							end
+						end
+					end
+				else
+					concat_tb[#concat_tb + 1] = sign
+					if v ~= 1  then
+						concat_tb[#concat_tb + 1] = v
+					end
 				end
 				concat_tb[#concat_tb + 1] = "|r"
 			end
 		end
-		concat_tb[#concat_tb+1] = " "
 	end
 end
 LookingForGroup_Options.handle_title_role = handle_title_role
@@ -494,8 +558,35 @@ function LookingForGroup_Options.updatetitle(obj)
 	concat_tb[#concat_tb+1] = damager
 	concat_tb[#concat_tb+1] = ")|r "
 	handle_title_role(concat_tb,tank,tank_tb,"T")
+	if tank ~= 0 then
+		if tank <= 7 then
+			concat_tb[#concat_tb+1] = "|cff8080cc(|r"
+			handle_title_role(concat_tb,tank,tank_tb,"T",true)
+			concat_tb[#concat_tb+1] = "|cff8080cc)|r "
+		else
+			concat_tb[#concat_tb+1] = " "
+		end
+	end
 	handle_title_role(concat_tb,healer,healer_tb,"H")
+	if healer ~= 0 then
+		if healer <= 7 then
+			concat_tb[#concat_tb+1] = "|cff8080cc(|r"
+			handle_title_role(concat_tb,healer,healer_tb,"H",true)
+			concat_tb[#concat_tb+1] = "|cff8080cc)|r "
+		else
+			concat_tb[#concat_tb+1] = " "
+		end
+	end
 	handle_title_role(concat_tb,damager,damager_tb,"D")
+	if damager ~= 0 then
+		if damager <= 7 then
+			concat_tb[#concat_tb+1] = "|cff8080cc(|r"
+			handle_title_role(concat_tb,damager,damager_tb,"D",true)
+			concat_tb[#concat_tb+1] = "|cff8080cc)|r "
+		else
+			concat_tb[#concat_tb+1] = " "
+		end
+	end
 	local social_val = users.social_val
 	if social_val then
 		concat_tb[#concat_tb + 1] = SocialQueueUtil_GetHeaderName(social_val)
