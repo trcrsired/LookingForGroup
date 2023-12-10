@@ -18,7 +18,7 @@ LFG_OPT.option_table =
 }
 
 function LFG_OPT:OnInitialize()
-	self.db = LibStub("AceDB-3.0"):New("LFG_OPTDB",{profile ={a={},s={},window_height=600,window_width=840}},true)
+	self.db = LibStub("AceDB-3.0"):New("LookingForGroup_OptionsDB",{profile ={a={},s={},f={},window_height=600,window_width=840}},true)
 end
 
 local order = 0
@@ -130,7 +130,7 @@ LFG_OPT.options_get_a_function,LFG_OPT.options_set_a_function,LFG_OPT.options_ge
 LFG_OPT.options_get_s_function,LFG_OPT.options_set_s_function,LFG_OPT.options_get_s_function_negative,LFG_OPT.options_set_s_function_negative=generate_get_set(LFG_OPT,{"db","profile","s"})
 LFG_OPT.options_get_f_function,LFG_OPT.options_set_s_function,LFG_OPT.options_get_f_function_negative,LFG_OPT.options_set_f_function_negative=generate_get_set(LFG_OPT,{"db","profile","f"})
 LFG_OPT.options_get_tristate_function,LFG_OPT.options_set_tristate_function,
-LFG_OPT.options_get_tristate_function_negative,LFG_OPT.options_set_tristate_function_negative = generate_get_set(LFG_OPT,nil, true)
+LFG_OPT.options_get_tristate_function_negative,LFG_OPT.options_set_tristate_function_negative = generate_get_set(LFG_OPT, nil, true)
 LFG_OPT.options_get_a_tristate_function,LFG_OPT.options_set_a_tristate_function,
 LFG_OPT.options_get_a_tristate_function_negative,LFG_OPT.options_set_a_tristate_function_negative = generate_get_set(LFG_OPT,{"db","profile","a"}, true)
 LFG_OPT.options_get_s_tristate_function,LFG_OPT.options_set_s_tristate_function,
