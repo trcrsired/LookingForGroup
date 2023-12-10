@@ -29,7 +29,7 @@ end
 
 LFG_OPT.RegisterSimpleFilter("find",function(info,profile,mbnm)
 	local rse = C_LFGList.GetSearchResultEncounterInfo(info.searchResultID)
-	local encounters = profile[encounters_name]
+	local encounters = profile.a.encounters
 	local mct = 0
 	if rse then
 		for i=1,#rse do
@@ -45,7 +45,7 @@ LFG_OPT.RegisterSimpleFilter("find",function(info,profile,mbnm)
 		return 1
 	end
 end,function(profile)
-	local encounters = profile[encounters_name]
+	local encounters = profile.a.encounters
 	if encounters then
 		local mbnm = 0
 		for k,v in pairs(encounters) do
