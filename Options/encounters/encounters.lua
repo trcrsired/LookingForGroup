@@ -86,11 +86,7 @@ local function get_profile_a_group()
 end
 
 function LFG_OPT.generate_encounters_options(metadata)
-	local encounters_tb = metadata.encounters_tb
-	if encounters_tb == nil then
-		encounters_tb = {}
-		metadata.encounters_tb = encounters_tb
-	end
+	local encounters_tb
 	local get_profile_group = metadata.get_profile_group
 	if get_profile_group == nil then
 		get_profile_group = get_profile_a_group
@@ -139,6 +135,7 @@ function LFG_OPT.generate_encounters_options(metadata)
 						encounters_tb = generate_encounters_table(group, instance_tb, metadata)
 						if encounters_tb == nil and generate_encounters_table_on_null then
 							encounters_tb = generate_encounters_table_on_null(group, instance_tb, metadata)
+							metadata.encounters_tb = encounters_tb
 						end
 					end
 					return encounters_tb
