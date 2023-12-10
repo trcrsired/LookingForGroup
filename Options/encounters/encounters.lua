@@ -33,7 +33,11 @@ LFG_OPT.RegisterSimpleFilter("find",function(info,profile,mbnm)
 	local mct = 0
 	if rse then
 		for i=1,#rse do
-			local gt = encounters[rse[i]]
+			local ectb = encounters[rse[i]]
+			local gt
+			if ectb then
+				gt = ectb[2]
+			end
 			if gt then
 				mct = mct + 1
 			elseif gt == false then
@@ -48,8 +52,8 @@ end,function(profile)
 	local encounters = profile.a.encounters
 	if encounters then
 		local mbnm = 0
-		for k,v in pairs(encounters) do
-			if v then
+		for _,v in pairs(encounters) do
+			if v[2] then
 				mbnm = mbnm + 1
 			end
 		end
@@ -136,7 +140,11 @@ function LFG_OPT.generate_encounters_options(metadata)
 					if encounters == nil then
 						return false
 					end
-					local v = encounters[encounters_tb[val]]
+					local etb = encounters[encounters_tb[val]]
+					if etb == nil then
+						return false
+					end
+					local v = etb[2]
 					if v then
 						return true
 					elseif v == false then
@@ -145,18 +153,28 @@ function LFG_OPT.generate_encounters_options(metadata)
 					return false
 				end,
 				set = function(info,key,val)
-					local k = false
+					local v = false
 					if val then
-						k = true
+						v = true
 					elseif val == false then
-						k = nil
+						v = nil
 					end
 					local profile = get_profile(metadata)
-					profile[new] = nil
-					if profile[encounters_name] == nil then
-						profile[encounters_name] = {}
+					if new then
+						profile[new] = nil
 					end
-					profile[encounters_name][encounters_tb[key]] = k
+					local profileencountersname = profile[encounters_name]
+					if profileencountersname == nil then
+						profileencountersname = {}
+						profile[encounters_name] = profileencountersname
+					end
+					local pcetb = profileencountersname[encounters_tb[key]]
+					if pcetb == nil then
+						pcetb = {}
+						profileencountersname[encounters_tb[key]] = pcetb
+					end
+					pcetb[1] = key
+					pcetb[2] = v
 				end
 			},
 			clearall =
@@ -197,7 +215,7 @@ function LFG_OPT.generate_encounters_options(metadata)
 						if groupnm == instanceName and difficultyName == shortname then
 							local t = {}
 							for j = 1, maxBosses do
-								t[encounters_tb[j]] = killed_func(metadata,i,j,activity,activity_infotb,locked)
+								t[encounters_tb[j]] = {j,killed_func(metadata,i,j,activity,activity_infotb,locked)}
 							end
 							if temp_encounters then
 								local same = true
