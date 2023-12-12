@@ -359,7 +359,7 @@ function LookingForGroup.IsLookingForGroupEnabled()
 	if IsRestrictedAccount() then
 		return false
 	end
-	if UnitLevel("player") < GetMaxLevelForLatestExpansion() then
+	if GetMaxLevelForLatestExpansion == nil or UnitLevel("player") < GetMaxLevelForLatestExpansion() then
 		return false
 	end
 	return true
