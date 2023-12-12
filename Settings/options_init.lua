@@ -150,6 +150,8 @@ local localizedSpecNameToIndex = {}
 local GetSpecializationInfoForClassID = GetSpecializationInfoForClassID
 LFG_OPT.localizedSpecNameToIndex = localizedSpecNameToIndex
 
+if GetSpecializationInfoForClassID then
+
 for classID = 1, GetNumClasses() do
 	local lspectoicontb = localizedSpecNameToIndex[classID]
 	lspectoicontb = {}
@@ -160,6 +162,7 @@ for classID = 1, GetNumClasses() do
 			lspectoicontb[localizedSpecName] = specIndex
 		end
 	end
+end
 end
 
 function LFG_OPT.IsSelected(groupname)

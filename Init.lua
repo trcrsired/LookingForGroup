@@ -6,7 +6,9 @@ function LookingForGroup:OnInitialize()
 	self:RegisterChatCommand("LFG", "ChatCommand")
 	self:RegisterChatCommand(LFG_TITLE:gsub(" ",""), "ChatCommand")
 	if LFGListFrame then
-		LookingForGroup.lfgsystemactivate = true
+		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE or 4 < LE_EXPANSION_LEVEL_CURRENT then
+			LookingForGroup.lfgsystemactivate = true
+		end
 	end
 	local disable_pve_frame
 	local GetAddOnMetadata = GetAddOnMetadata
