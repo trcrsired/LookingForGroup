@@ -23,6 +23,11 @@ local function is_queueing_lfg()
 	end
 end
 
+local C_PartyInfo_LeaveParty = C_PartyInfo.LeaveParty
+if C_PartyInfo_LeaveParty == nil then
+	C_PartyInfo_LeaveParty = LeaveParty
+end
+
 function LookingForGroup.accepted(tb)
 	if C_LFGList.HasActiveEntryInfo() then
 		return
@@ -424,7 +429,7 @@ function LookingForGroup.accepted(tb)
 						end
 					end
 					if not could_do_in_raid then
-						C_PartyInfo.LeaveParty()
+						C_PartyInfo_LeaveParty()
 --[[					else
 
 						local UnitClass = UnitClass
@@ -674,14 +679,14 @@ function LookingForGroup.autoloop(tb)
 			local nm = GetNumGroupMembers()
 			local auto_leave_party = profile.auto_leave_party
 			if nm == 0 or (k == 0 and (nm == 1 or (not gpl and auto_leave_party))) then
-				C_PartyInfo.LeaveParty()
+				C_PartyInfo_LeaveParty()
 				break
 			elseif k == 0 and gpl and not hardware then
 				if lfg_enabled then
 					C_LFGList.RemoveListing()
 				end
 			else
-				local tb = {nop,ACCEPT,C_PartyInfo.LeaveParty}
+				local tb = {nop,ACCEPT,C_PartyInfo_LeaveParty}
 				if C_LFGList.HasActiveEntryInfo() and UnitIsGroupLeader("player") then
 					tb[#tb+1]=UNLIST_MY_GROUP
 					tb[#tb+1]=function()
@@ -704,7 +709,7 @@ function LookingForGroup.autoloop(tb)
 		elseif k == 11 then
 			if not IsInInstance() then
 				if IsInGroup() then
-					C_PartyInfo.LeaveParty()
+					C_PartyInfo_LeaveParty()
 				else
 					break
 				end
@@ -881,7 +886,7 @@ function LookingForGroup.autoloop(tb)
 						else
 							SendChatMessage(quitmessage,"PARTY")
 						end
-						C_PartyInfo.LeaveParty()
+						C_PartyInfo_LeaveParty()
 						break
 					end
 				else
