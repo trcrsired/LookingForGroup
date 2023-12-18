@@ -397,7 +397,13 @@ LFG_OPT.Register("mplus_callbacks",nil,function(profile,a,s)
 --	s.minimum_item_level = avgItemLevelEquipped-10
 	s.role = true
 	s.diverse = true
-	s.mplus_elitist_level = C_MythicPlus.GetOwnedKeystoneLevel() + 1
+	local level = C_MythicPlus.GetOwnedKeystoneLevel()
+	if level then
+		if 2 < level then
+			level = level - 1
+		end
+	end
+	s.mplus_elitist_level = level
 end)
 
 local function is_finish_unsuccessful(mplus_elitist_level,bestRunLevel,finishedSuccess)
