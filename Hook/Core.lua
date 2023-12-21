@@ -3,8 +3,12 @@ local Hook = LookingForGroup:NewModule("Hook","AceHook-3.0")
 
 function Hook:OnInitialize()
 	if WOW_PROJECT_ID == 1 or WOW_PROJECT_ID >= 11 then
-	self:SecureHook("QuestObjectiveSetupBlockButton_FindGroup")
-	self:SecureHook("QuestObjectiveReleaseBlockButton_FindGroup")
+	if QuestObjectiveSetupBlockButton_FindGroup then
+		self:SecureHook("QuestObjectiveSetupBlockButton_FindGroup")
+	end
+	if QuestObjectiveReleaseBlockButton_FindGroup then
+		self:SecureHook("QuestObjectiveReleaseBlockButton_FindGroup")
+	end
 	local disable_pve_frame = LookingForGroup.disable_pve_frame
 	if disable_pve_frame == nop then
 		self:RawHook("QueueStatusDropDown_AddLFGListButtons",true)
