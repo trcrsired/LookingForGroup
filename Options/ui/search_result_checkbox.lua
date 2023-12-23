@@ -187,12 +187,28 @@ local function GetSearchEntryMenu(resultID)
 					local leaderName = info.leaderName
 					local activityID = info.activityID
 					if leaderName then
-						if activityID == 1189 or activityID == 1190 then -- Vault of the Incarnates N/H
-							SendChatMessage(raid_achievement(17108,17107),"WHISPER",nil,leaderName)
+						if activityID == 1253 then -- Amirdrassil M
+							SendChatMessage(raid_achievement(19351),"WHISPER",nil,leaderName)
 						end
 
-						if activityID == 1191 then -- Vault of the Incarnates H
+						if activityID == 1252 or activityID == 1251 then -- Amirdrassil N/H
+							SendChatMessage(raid_achievement(19351,19350),"WHISPER",nil,leaderName)
+						end
+
+						if activityID == 1237 then -- Aberrus M
+							SendChatMessage(raid_achievement(18254),"WHISPER",nil,leaderName)
+						end
+
+						if activityID == 1235 or activityID == 1236 then -- Aberrus N/H
+							SendChatMessage(raid_achievement(18254,18253),"WHISPER",nil,leaderName)
+						end
+
+						if activityID == 1191 then -- Vault of the Incarnates M
 							SendChatMessage(raid_achievement(17108),"WHISPER",nil,leaderName)
+						end
+
+						if activityID == 1189 or activityID == 1190 then -- Vault of the Incarnates N/H
+							SendChatMessage(raid_achievement(17108,17107),"WHISPER",nil,leaderName)
 						end
 
 						if activityID == 6 then -- 2 Bots vs 2 Bots

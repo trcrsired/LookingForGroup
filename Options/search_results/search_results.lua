@@ -78,7 +78,7 @@ function LookingForGroup_Options.Search(dialog_control,filter_options,
 		LookingForGroup.resume(current)
 	end
 	local unsecure_state
-	local yd,arg1,arg2 = 0
+	local yd,arg1,arg2,arg3,arg4,arg5 = 0
 	local sign_up_coroutine
 
 	local auto_sign_up =
