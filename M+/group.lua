@@ -395,7 +395,26 @@ LFG_OPT:push("m+",{
 LFG_OPT.Register("mplus_callbacks",nil,function(profile,a,s)
 	s.role = true
 	s.diverse = true
-	s.mplus_elitist_level = C_MythicPlus.GetOwnedKeystoneLevel()
+	local level = C_MythicPlus.GetOwnedKeystoneLevel()
+	if not level then
+		s.mplus_elitist_level = nil
+		return
+	end
+	local best_kl = 10
+	local C_MythicPlus_GetRewardLevelForDifficultyLevel = C_MythicPlus.GetRewardLevelForDifficultyLevel
+	local best_rw = C_MythicPlus_GetRewardLevelForDifficultyLevel(best_kl)
+	while best_kl < 31 do
+		local gg = C_MythicPlus_GetRewardLevelForDifficultyLevel(best_kl+5)
+		if gg == best_rw then
+			break
+		end
+		best_rw = gg
+		best_kl = best_kl + 5
+	end
+	if  level <= best_kl - 5 or level <= best_kl + 1 then
+		level = level + 1
+	end
+	s.mplus_elitist_level = level
 end)
 
 local function is_finish_unsuccessful(mplus_elitist_level,bestRunLevel,finishedSuccess)
