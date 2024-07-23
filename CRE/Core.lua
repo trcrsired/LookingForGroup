@@ -147,7 +147,9 @@ cr.server =
 cr.map=
 {
 	order = 9,
-	name = GetRealZoneText,
+	name = function()
+		return GetRealZoneText()
+	end,
 	type = "toggle",
 	set = function(_,val)
 		if val then
