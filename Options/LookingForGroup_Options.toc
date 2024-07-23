@@ -1,4 +1,4 @@
-## Interface: 100205
+## Interface: 110000
 ## Author: cqwrteur
 ## Title: LookingForGroup Options
 ## SavedVariables: LookingForGroup_OptionsDB

@@ -11,7 +11,9 @@ function Hook:OnInitialize()
 	end
 	local disable_pve_frame = LookingForGroup.disable_pve_frame
 	if disable_pve_frame == nop then
-		self:RawHook("QueueStatusDropDown_AddLFGListButtons",true)
+		if QueueStatusDropDown_AddLFGListButtons then
+			self:RawHook("QueueStatusDropDown_AddLFGListButtons",true)
+		end
 		self:RawHook("QueueStatusEntry_SetUpLFGListApplication",true)
 		self:RawHook("QueueStatusEntry_SetUpLFGListActiveEntry",true)
 		self:RawHook("LFGListUtil_OpenBestWindow",true)
@@ -78,27 +80,6 @@ end
 
 function Hook:LFGListUtil_OpenBestWindow()
 	LookingForGroup:SendMessage("LFG_ICON_LEFT_CLICK","LookingForGroup","requests")
-end
-
-function Hook:QueueStatusDropDown_AddLFGListButtons()
-	local info = {notCheckable = 1}
-	if UnitIsGroupLeader("player") then
-		info.text = EDIT
-	else
-		info.text = VIEW
-	end
-	info.func = function()
-		LookingForGroup:SendMessage("LFG_UPDATE_EDITING")
-	end
-	UIDropDownMenu_AddButton(info)
-	info.text = LFG_LIST_VIEW_GROUP
-	info.func = LFGListUtil_OpenBestWindow
-	UIDropDownMenu_AddButton(info)
-	if UnitIsGroupLeader("player") then
-		info.text = UNLIST_MY_GROUP
-		info.func = C_LFGList.RemoveListing
-		UIDropDownMenu_AddButton(info)
-	end
 end
 
 function Hook:QueueStatusDropDown_AddLFGListButtons()
