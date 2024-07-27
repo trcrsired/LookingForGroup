@@ -1,5 +1,6 @@
 ## Interface: 30402
 ## Author: cqwrteur
+## Version: @project-version@
 ## Title: LookingForGroup PVP
 ## Dependencies: LookingForGroup_Options
 ## LoadOnDemand: 1

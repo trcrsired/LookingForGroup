@@ -1,5 +1,6 @@
 ## Interface: 20504
 ## Author: cqwrteur
+## Version: @project-version@
 ## Title: LookingForGroup Bindings
 ## Dependencies: LookingForGroup
 

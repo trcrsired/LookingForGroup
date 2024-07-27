@@ -1,7 +1,7 @@
 ## Interface: 20504
 ## Author: cqwrteur
-## Title: LookingForGroup
 ## Version: @project-version@
+## Title: LookingForGroup
 ## SavedVariables: LookingForGroupDB
 ## OptionalDeps: Ace3
 

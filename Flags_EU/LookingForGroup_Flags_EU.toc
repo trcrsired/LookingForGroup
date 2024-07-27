@@ -1,5 +1,6 @@
 ## Interface: 110000
 ## Author: cqwrteur
+## Version: @project-version@
 ## Title: LookingForGroup Flags EU
 ## Version: @project-version@
 ## Dependencies: LookingForGroup

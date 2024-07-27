@@ -1,5 +1,6 @@
 ## Interface: 30402
 ## Author: cqwrteur
+## Version: @project-version@
 ## Title: LookingForGroup Quest
 ## LoadOnDemand: 1
 ## X-LFG-EVENT: QUEST_ACCEPTED

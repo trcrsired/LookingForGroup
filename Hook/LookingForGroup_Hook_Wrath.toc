@@ -1,5 +1,6 @@
 ## Interface: 30402
 ## Author: cqwrteur
+## Version: @project-version@
 ## Title: LookingForGroup Hook
 ## Dependencies: LookingForGroup
 

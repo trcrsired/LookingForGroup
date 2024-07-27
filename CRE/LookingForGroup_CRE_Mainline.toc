@@ -1,5 +1,6 @@
 ## Interface: 110000
 ## Author: cqwrteur
+## Version: @project-version@
 ## Title: LookingForGroup Cross Realm Enhancement
 ## Dependencies: LookingForGroup_Options
 ## X-LFG-OPT: 0

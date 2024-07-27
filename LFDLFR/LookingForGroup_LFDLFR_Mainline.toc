@@ -1,5 +1,6 @@
 ## Interface: 110000
 ## Author: cqwrteur
+## Version: @project-version@
 ## Title: LookingForGroup LFD/LFR
 ## Dependencies: LookingForGroup_Options
 ## LoadOnDemand: 1

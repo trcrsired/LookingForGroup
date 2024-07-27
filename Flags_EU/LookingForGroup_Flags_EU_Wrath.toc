@@ -1,5 +1,6 @@
 ## Interface: 30402
 ## Author: cqwrteur
+## Version: @project-version@
 ## Title: LookingForGroup Flags EU
 ## Version: @project-version@
 ## Dependencies: LookingForGroup

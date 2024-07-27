@@ -1,5 +1,6 @@
 ## Interface: 11404
 ## Author: cqwrteur
+## Version: @project-version@
 ## Title: LookingForGroup Elite
 ## LoadOnDemand: 1
 ## X-LFG-EVENT: 0
