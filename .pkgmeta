@@ -17,4 +17,25 @@ externals:
 	Broker/Libs/LibDataBroker-1.1: https://repos.wowace.com/wow/libdbicon-1-0/trunk/LibDataBroker-1.1
 	Icon/Libs/LibDBIcon-1.0: https://repos.wowace.com/wow/libdbicon-1-0/trunk/LibDBIcon-1.0
 
-
+move-folders:
+	LookingForGroup/Options: LookingForGroup_Options
+	LookingForGroup/Settings: LookingForGroup_Settings
+	LookingForGroup/Hook: LookingForGroup_Hook
+	LookingForGroup/Broker: LookingForGroup_Broker
+	LookingForGroup/Icon: LookingForGroup_Icon
+	LookingForGroup/CR: LookingForGroup_CR
+	LookingForGroup/CRE: LookingForGroup_CRE
+	LookingForGroup/M+: LookingForGroup_M+
+	LookingForGroup/PVP: LookingForGroup_PVP
+	LookingForGroup/LFDLFR: LookingForGroup_LFDLFR
+	LookingForGroup/SF: LookingForGroup_SF
+	LookingForGroup/Bindings: LookingForGroup_Bindings
+	LookingForGroup/Auto: LookingForGroup_Auto
+	LookingForGroup/Event: LookingForGroup_Event
+	LookingForGroup/Q: LookingForGroup_Q
+	LookingForGroup/QJ: LookingForGroup_QJ
+	LookingForGroup/Solo: LookingForGroup_Solo
+	LookingForGroup/Elite: LookingForGroup_Elite
+	LookingForGroup/Flags_US: LookingForGroup_Flags_US
+	LookingForGroup/Flags_EU: LookingForGroup_Flags_EU
+	LookingForGroup/Flags_CN: LookingForGroup_Flags_CN
