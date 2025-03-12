@@ -1,11 +1,14 @@
-local LFG_OPT = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup_Options")
+local LibStub = LibStub
+local AceAddon = LibStub("AceAddon-3.0")
+local LFG = AceAddon:GetAddon("LFG")
+local LFG_OPT = AceAddon:GetAddon("LookingForGroup_Options")
 
 local AceGUI = LibStub("AceGUI-3.0")
 
 local function factory(Type,framename,func,challenges)
 	AceGUI:RegisterWidgetType(Type,function()
 		if _G[framename] == nil then
-			LoadAddOn(challenges and "Blizzard_ChallengesUI" or "Blizzard_PVPUI")
+			LFG.C_AddOns.LoadAddOn(challenges and "Blizzard_ChallengesUI" or "Blizzard_PVPUI")
 		end
 		local frame = _G[framename]
 		if challenges then
