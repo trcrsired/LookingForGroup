@@ -1,6 +1,6 @@
 local LibStub = LibStub
 local AceAddon = LibStub("AceAddon-3.0")
-local LFG = AceAddon:GetAddon("LFG")
+local LFG = AceAddon:GetAddon("LookingForGroup")
 local LFG_OPT = AceAddon:GetAddon("LookingForGroup_Options")
 
 local AceGUI = LibStub("AceGUI-3.0")
