@@ -258,7 +258,7 @@ LookingForGroup_Options:push_settings("sf",{
 				}
 			}
 		},
-		addons =	IsAddOnLoaded("LookingForGroup_SF") and
+		addons = LookingForGroup.C_AddOns.IsAddOnLoaded("LookingForGroup_SF") and
 		{
 			name = ADDONS,
 			type = "group",
