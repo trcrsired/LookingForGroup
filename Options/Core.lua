@@ -1,6 +1,11 @@
 local AceAddon = LibStub("AceAddon-3.0")
 local LookingForGroup = AceAddon:GetAddon("LookingForGroup")
 local LookingForGroup_Options = AceAddon:GetAddon("LookingForGroup_Options")
+local LoadAddOn = C_AddOns.LoadAddOn
+local GetNumAddOns = C_AddOns.GetNumAddOns
+local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
+local GetAddOnInfo = C_AddOns.GetAddOnInfo
 
 function LookingForGroup_Options.aj_open_action(...)
 	local AceConfigDialog = LibStub("AceConfigDialog-3.0")

@@ -1,5 +1,16 @@
 local LookingForGroup = LibStub("AceAddon-3.0"):NewAddon("LookingForGroup","AceEvent-3.0","AceConsole-3.0")
 
+local C_AddOns = C_AddOns
+if C_AddOns == nil then
+	C_AddOns = _G
+end
+
+local LoadAddOn = C_AddOns.LoadAddOn
+local GetNumAddOns = C_AddOns.GetNumAddOns
+local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
+local GetAddOnInfo = C_AddOns.GetAddOnInfo
+
 function LookingForGroup:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("LookingForGroupDB",{profile = ((GetCurrentRegion()==5 and {spam_filter_maxlength=120,spam_filter_digits=2,spam_filter_hyperlinks=2}) or {spam_filter_maxlength=80,hardware = true})},true)
 	self:RegisterChatCommand("LookingForGroup", "ChatCommand")
