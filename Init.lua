@@ -14,9 +14,12 @@ else
 LookingForGroup.C_Addons = C_AddOns
 end
 
-local LookingForGroup_C_Addons = LookingForGroup.C_Addons
-local GetAddOnMetadata = LookingForGroup_C_Addons.GetAddOnMetadata
-local GetAddOnInfo = LookingForGroup_C_Addons.GetAddOnInfo
+local LFG_C_Addons = LookingForGroup.C_Addons
+local GetAddOnMetadata = LFG_C_Addons.GetAddOnMetadata
+local GetAddOnInfo = LFG_C_Addons.GetAddOnInfo
+local GetNumAddOns = LFG_C_Addons.GetNumAddOns
+local IsAddOnLoaded = LFG_C_Addons.IsAddOnLoaded
+local LoadAddOn = LFG_C_Addons.LoadAddOn
 
 function LookingForGroup:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("LookingForGroupDB",{profile = ((GetCurrentRegion()==5 and {spam_filter_maxlength=120,spam_filter_digits=2,spam_filter_hyperlinks=2}) or {spam_filter_maxlength=80,hardware = true})},true)
