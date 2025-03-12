@@ -2,14 +2,21 @@ local LookingForGroup = LibStub("AceAddon-3.0"):NewAddon("LookingForGroup","AceE
 
 local C_AddOns = C_AddOns
 if C_AddOns == nil then
-	C_AddOns = _G
+LookingForGroup.C_Addons =
+{
+LoadAddOn = LoadAddOn,
+GetNumAddOns = GetNumAddOns,
+GetAddOnMetadata = GetAddOnMetadata,
+IsAddOnLoaded = IsAddOnLoaded,
+GetAddOnInfo = GetAddOnInfo
+}
+else
+LookingForGroup.C_Addons = C_AddOns
 end
 
-local LoadAddOn = C_AddOns.LoadAddOn
-local GetNumAddOns = C_AddOns.GetNumAddOns
-local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
-local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
-local GetAddOnInfo = C_AddOns.GetAddOnInfo
+local LookingForGroup_C_Addons = LookingForGroup.C_Addons
+local GetAddOnMetadata = LookingForGroup_C_Addons.GetAddOnMetadata
+local GetAddOnInfo = LookingForGroup_C_Addons.GetAddOnInfo
 
 function LookingForGroup:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("LookingForGroupDB",{profile = ((GetCurrentRegion()==5 and {spam_filter_maxlength=120,spam_filter_digits=2,spam_filter_hyperlinks=2}) or {spam_filter_maxlength=80,hardware = true})},true)
@@ -22,8 +29,6 @@ function LookingForGroup:OnInitialize()
 		end
 	end
 	local disable_pve_frame
-	local GetAddOnMetadata = GetAddOnMetadata
-	local GetAddOnInfo = GetAddOnInfo
 	for i = 1, GetNumAddOns() do
 		if GetAddOnMetadata(i, "X-LFG-DISABLE-PVEFRAME") then
 			local name, title, notes, loadable, reason, security, newVersion = GetAddOnInfo(i)

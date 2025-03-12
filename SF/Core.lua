@@ -1,5 +1,7 @@
 local LookingForGroup = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup")
 local SF = LookingForGroup:NewModule("SF","AceEvent-3.0")
+local C_AddOns = LookingForGroup.C_AddOns
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 local function cofunc()
 	local current = coroutine.running()

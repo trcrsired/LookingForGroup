@@ -1,6 +1,8 @@
 local AceAddon = LibStub("AceAddon-3.0")
 local LFG_OPT = AceAddon:NewAddon("LookingForGroup_Options","AceEvent-3.0")
 local LookingForGroup = AceAddon:GetAddon("LookingForGroup")
+local LFG_C_AddOns = LookingForGroup.C_AddOns
+
 LFG_OPT.player_faction_name,LFG_OPT.player_localized_faction_name = UnitFactionGroup("player")
 
 if LFG_OPT.player_localized_faction_name ==nil or LFG_OPT.player_localized_faction_name:len()==0 then
@@ -13,7 +15,7 @@ end
 LFG_OPT.option_table =
 {
 	type = "group",
-	name = LFG_TITLE:gsub(" ","").." |cff8080cc"..GetAddOnMetadata("LookingForGroup","Version").."|r",
+	name = LFG_TITLE:gsub(" ","").." |cff8080cc"..LFG_C_AddOns.GetAddOnMetadata("LookingForGroup","Version").."|r",
 	args = {}
 }
 
@@ -229,7 +231,7 @@ function LFG_OPT:OnEnable()
 				name = ENABLE,
 				type = "execute",
 				func = function()
-					LoadAddOn("LookingForGroup_Settings")
+					LFG_C_AddOns.LoadAddOn("LookingForGroup_Settings")
 					collectgarbage("collect")
 					LFG_OPT:SendMessage("LFG_SETTINGS_ENABLED")
 				end
