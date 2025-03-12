@@ -1,4 +1,4 @@
-## Interface: 110007, 110100
+## Interface: 110007, 110100, 110105
 ## Author: cqwrteur
 ## Version: @project-version@
 ## Title: LookingForGroup Settings
