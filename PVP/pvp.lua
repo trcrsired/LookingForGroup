@@ -61,11 +61,13 @@ end
 local function set_relative(frame,tb)
 	for i=1,#tb do
 		local t = frame[tb[i]]
-		local point, relativeTo, relativePoint, xOfs, yOfs = t:GetPoint(1)
-		t:ClearAllPoints()
-		t:SetPoint("TOPLEFT",relativeTo,relativePoint.."LEFT",xOfs,yOfs)
-		t:SetPoint("TOPRIGHT",relativeTo,relativePoint.."RIGHT",xOfs,yOfs)
-		t.Reward:SetPoint("RIGHT",-16,-2)
+		if t then
+			local point, relativeTo, relativePoint, xOfs, yOfs = t:GetPoint(1)
+			t:ClearAllPoints()
+			t:SetPoint("TOPLEFT",relativeTo,relativePoint.."LEFT",xOfs,yOfs)
+			t:SetPoint("TOPRIGHT",relativeTo,relativePoint.."RIGHT",xOfs,yOfs)
+			t.Reward:SetPoint("RIGHT",-16,-2)
+		end
 	end
 end
 
@@ -75,8 +77,12 @@ factory("LFG_OPT_HONOR","HonorFrame",function(frame)
 	QueueButton:ClearAllPoints()
 	QueueButton:SetPoint("BOTTOMLEFT",0,0)
 	QueueButton:SetPoint("BOTTOMRIGHT",0,0)
-	set_relative(frame.BonusFrame,{"RandomBGButton","RandomEpicBGButton","Arena1Button","BrawlButton","BrawlButton2"})
+	set_relative(frame.BonusFrame,{"RandomBGButton","Arena1Button","RandomEpicBGButton","BrawlButton","BrawlButton2"})
 	frame.BonusFrame.WorldBattlesTexture:SetAllPoints()
+	end
+	local typeDropdown = frame.typeDropdown
+	if typeDropdown then
+		
 	end
 --[[
 	local SpecificFrame = frame.SpecificFrame
@@ -98,7 +104,7 @@ factory("LFG_OPT_CONQUEST","ConquestFrame",function(frame)
 	JoinButton:ClearAllPoints()
 	JoinButton:SetPoint("BOTTOMLEFT",0,0)
 	JoinButton:SetPoint("BOTTOMRIGHT",0,0)
-	set_relative(frame,{"RatedSoloShuffle","Arena2v2","Arena3v3","RatedBG"})
+	set_relative(frame,{"RatedSoloShuffle","RatedBGBlitz","Arena2v2","Arena3v3","RatedBG"})
 end)
 --[[
 factory("LFG_OPT_CHALLENGES","ChallengesFrame",function(frame)
