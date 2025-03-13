@@ -80,9 +80,30 @@ factory("LFG_OPT_HONOR","HonorFrame",function(frame)
 	set_relative(frame.BonusFrame,{"RandomBGButton","Arena1Button","RandomEpicBGButton","BrawlButton","BrawlButton2"})
 	frame.BonusFrame.WorldBattlesTexture:SetAllPoints()
 	end
-	local typeDropdown = frame.typeDropdown
+	local typeDropdown = frame.TypeDropdown
 	if typeDropdown then
-		
+		local HonorInset = PVPQueueFrame.HonorInset
+		if HonorInset then
+			typeDropdown:ClearAllPoints()
+			typeDropdown:SetParent(HonorInset)
+			typeDropdown:SetPoint("BOTTOMLEFT", HonorInset,"TOPLEFT",0,0)
+			if LFG_OPT.honorframe_onshow_secure_hook == nil then
+				LFG_OPT.honorframe_onshow_secure_hook = function(self)
+					local typeDropdown = frame.TypeDropdown
+					typeDropdown:Show()
+				end
+				HonorFrame:HookScript("OnShow",LFG_OPT.honorframe_onshow_secure_hook)
+				LFG_OPT.honorframe_onhide_secure_hook = function(self)
+					local typeDropdown = frame.TypeDropdown
+					typeDropdown:Hide()
+				end
+				HonorFrame:HookScript("OnHide",LFG_OPT.honorframe_onhide_secure_hook)
+			end
+		end
+		--typeDropdown:ClearAllPoints()
+
+		--typeDropdown:SetPoint("BOTTOMRIGHT",frame,"TOPRIGHT",0,25)
+		-- typeDropdown:SetMenuAnchor(AnchorUtil.CreateAnchor("BOTTOM",frame,"TOPRIGHT",0,25))
 	end
 --[[
 	local SpecificFrame = frame.SpecificFrame
