@@ -1,70 +1,74 @@
-local LookingForGroup_Options = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup_Options")
+local AceAddon = LibStub("AceAddon-3.0")
+local LookingForGroup = AceAddon:GetAddon("LookingForGroup")
+local LookingForGroup_Options = AceAddon:GetAddon("LookingForGroup_Options")
 
 LookingForGroup_Options.RegisterSimpleFilter("find",function(info,profile,flag_array)
-	local activity_infotb =  C_LFGList.GetActivityInfoTable(info.activityID)
-	local categoryID = activity_infotb.categoryID
-	local band = bit.band
+	local activityIDs,activityIDsInfos = LookingForGroup.getActivityIDsInTable(info, true)
 	local tb = C_LFGList.GetSearchResultMemberCounts(info.searchResultID)
-	local tank = tb.TANK + flag_array[2] 
-	local healer = tb.HEALER + flag_array[3]
-	local damager = tb.NOROLE + tb.DAMAGER + flag_array[4]
-	local flag = flag_array[1]
-	local t,h,d = band(flag,1)~=0,band(flag,2)~=0,band(flag,4)~=0
-	if band(flag,8) ~= 0 then
-		local filtered = true
-		if categoryID == 1 or categoryID == 4 then
-			if d or (h and healer == 0) or (t and tank == 0) then
+	for i=1,#activityIDsInfos do
+		local activityID = activityIDsInfos[i]
+		local band = bit.band
+		local tank = tb.TANK + flag_array[2] 
+		local healer = tb.HEALER + flag_array[3]
+		local damager = tb.NOROLE + tb.DAMAGER + flag_array[4]
+		local flag = flag_array[1]
+		local t,h,d = band(flag,1)~=0,band(flag,2)~=0,band(flag,4)~=0
+		if band(flag,8) ~= 0 then
+			local filtered = true
+			if categoryID == 1 or categoryID == 4 then
+				if d or (h and healer == 0) or (t and tank == 0) then
+					filtered = false
+				end
+			elseif categoryID == 2 then
+				if (d and (damager < 3)) or (h and healer == 0 and damager ~= 4) or (t and tank == 0) then
+					filtered = false
+				end
+			elseif categoryID == 3 then
+				local nm = 15
+				if nm < info.numMembers then
+					nm = info.numMembers
+				end
+				local maxhealer = math.ceil(nm/5)
+				local maxmembers = maxhealer * 5
+				if (d and damager + 1 < maxmembers) or (h and healer < maxhealer) or (t and tank < 2) then
+					filtered = false
+				end
+			elseif categoryID == 9 then
+				if (d and damager < 7) or (h and healer < 3) or (t and tank == 0) then
+					filtered = false
+				end
+			else
 				filtered = false
 			end
-		elseif categoryID == 2 then
-			if (d and (damager < 3)) or (h and healer == 0 and damager ~= 4) or (t and tank == 0) then
-				filtered = false
-			end
-		elseif categoryID == 3 then
-			local nm = 15
-			if nm < info.numMembers then
-				nm = info.numMembers
-			end
-			local maxhealer = math.ceil(nm/5)
-			local maxmembers = maxhealer * 5
-			if (d and damager + 1 < maxmembers) or (h and healer < maxhealer) or (t and tank < 2) then
-				filtered = false
-			end
-		elseif categoryID == 9 then
-			if (d and damager < 7) or (h and healer < 3) or (t and tank == 0) then
-				filtered = false
-			end
-		else
-			filtered = false
+			if filtered then return 1 end
 		end
-		if filtered then return 1 end
-	end
-	if band(flag,16) ~= 0 then
-		local maxNumPlayers = activity_infotb.maxNumPlayers
-		if categoryID == 9 then	--fixed around rated bg issues
-			maxNumPlayers = 10
-		elseif maxNumPlayers == 0 then
-			maxNumPlayers = 40
-		end
-		if info.numMembers >= maxNumPlayers then
+		if band(flag,16) ~= 0 then
+			local maxNumPlayers = activity_infotb.maxNumPlayers
+			if categoryID == 9 then	--fixed around rated bg issues
+				maxNumPlayers = 10
+			elseif maxNumPlayers == 0 then
+				maxNumPlayers = 40
+			end
+			if info.numMembers >= maxNumPlayers then
+				return 1
+			end
+			if categoryID == 2 then
+				if t or tank == 1 then
+					return 0
+				end
+			elseif categoryID == 3 then
+				if t and 0 < tank or 1 < tank then
+					return 0
+				end
+			elseif categoryID == 9 then
+				if h and 1 < healer or 2 < healer then
+					return 0
+				end
+			else
+				return 0
+			end
 			return 1
 		end
-		if categoryID == 2 then
-			if t or tank == 1 then
-				return 0
-			end
-		elseif categoryID == 3 then
-			if t and 0 < tank or 1 < tank then
-				return 0
-			end
-		elseif categoryID == 9 then
-			if h and 1 < healer or 2 < healer then
-				return 0
-			end
-		else
-			return 0
-		end
-		return 1
 	end
 end,
 function(profile)
