@@ -9,7 +9,7 @@ local label_name = activity_infotb.shortName
 LFG_OPT.mythic_keystone_label_name = label_name
 
 LFG_OPT.RegisterSimpleFilter("find",function(info,profile,val)
-	local activityIDs = LookingForGroup.getActivityIDsInTable(info)
+	local activityIDs = LFG.getActivityIDsInTable(info)
 	for i=1,#activityIDs do
 		local info_tb = C_LFGList.GetActivityInfoTable(activityIDs[i])
 		local shortname = info_tb.shortName
