@@ -198,8 +198,14 @@ LookingForGroup_Options.RegisterSimpleApplicantFilter("s",function(id,pos,profil
 	local entry = C_LFGList.GetActiveEntryInfo()
 	local ratinginfo = C_LFGList.GetApplicantPvpRatingInfoForListing(id,pos,entry.activityID)
 	if ratinginfo then
-		if ratinginfo.rating > 784 then
+		if leader_rating_info.rating and leader_rating_info.rating > 784 then
 			return 1
+		end
+		for i=1,#leader_rating_info do
+			local rating = leader_rating_info[i].rating
+			if rating and rating > 784 then
+				return 1
+			end
 		end
 	else
 		return 1
@@ -214,8 +220,17 @@ LookingForGroup_Options.RegisterSimpleFilter("find",function(info)
 	end
 	local leader_rating_info = info.leaderPvpRatingInfo
 	if leader_rating_info then
-		if leader_rating_info.rating >= 1000 then
+		if leader_rating_info.rating and leader_rating_info.rating >= 1000 then
 			return 1
+		end
+		for i=1,#leader_rating_info do
+			for k,v in paris(leader_rating_info[i]) do
+				print(k,v)
+			end
+			local rating = leader_rating_info[i].rating
+			if rating and rating >= 1000 then
+				return 1
+			end
 		end
 	end
 end,function(profile)
@@ -398,7 +413,7 @@ LookingForGroup_Options.RegisterSimpleFilter("find",function(info,profile,member
 	local GetClassInfo = GetClassInfo
 	local numclasses = GetNumClasses()
 	local activityIDs = LookingForGroup.getActivityIDsInTable(info)
-	for j=1,activityIDs do
+	for j=1,#activityIDs do
 		local activity_infotb = C_LFGList.GetActivityInfoTable(activityIDs[j])
 		local maxPlayers = activity_infotb.maxNumPlayers
 		if maxPlayers < numclasses then
