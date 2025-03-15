@@ -473,7 +473,7 @@ function LookingForGroup_Options.updatetitle(obj)
 	if info == nil then
 		return
 	end
-	local activity_infotb = C_LFGList.GetActivityInfoTable(info.activityID)
+
 	local questID = info.questID
 	if questID then
 		local questName = C_TaskQuest.GetQuestInfoByQuestID(questID)
@@ -509,35 +509,42 @@ function LookingForGroup_Options.updatetitle(obj)
 	if need_line_is_war_mode then
 		concat_tb[#concat_tb+1] = "\n"
 	end
-	concat_tb[#concat_tb + 1] = activity_infotb.fullName
+	local activityID = info.activityID
+	local activityIDs = info.activityIDs or {}
+	if activityID then
+		activityIDs[#activityIDs+1] = activityID
+	end
+	for i=1,#activityIDs do
+		local activity_infotb = C_LFGList.GetActivityInfoTable(activityIDs[i])
+		concat_tb[#concat_tb + 1] = activity_infotb.fullName
+
+		local playstyle = info.playstyle
+		if playstyle ~= 0 then
+			local playstyleString
+			if LookingForGroup.db.profile.hardware then
+				if playstyle == 1 then
+					playstyleString=GUILD_PLAYSTYLE_CASUAL
+				elseif playstyle == 2 then
+					playstyleString=GUILD_PLAYSTYLE_MODERATE
+				elseif playstyle == 3 then
+					playstyleString=GUILD_PLAYSTYLE_HARDCORE
+				end
+			else
+				playstyleString = C_LFGList.GetPlaystyleString(playstyle, activity_infotb);
+			end
+			if playstyleString and playstyleString ~= "" then
+				concat_tb[#concat_tb+1] = "\n|cff8080cc"
+				concat_tb[#concat_tb+1] = playstyleString
+				concat_tb[#concat_tb+1] = "|r"
+			end
+		end
+	end
 	local iLvl = info.requiredItemLevel
 	if iLvl ~= 0 then
 		concat_tb[#concat_tb + 1] = " |cff8080cc"
 		concat_tb[#concat_tb + 1] = iLvl
 		concat_tb[#concat_tb + 1] = "|r"
 	end
-	local playstyle = info.playstyle
-	if playstyle ~= 0 then
-		local playstyleString
-		if LookingForGroup.db.profile.hardware then
-			if playstyle == 1 then
-				playstyleString=GUILD_PLAYSTYLE_CASUAL
-			elseif playstyle == 2 then
-				playstyleString=GUILD_PLAYSTYLE_MODERATE
-			elseif playstyle == 3 then
-				playstyleString=GUILD_PLAYSTYLE_HARDCORE
-			end
-		else
-			playstyleString = C_LFGList.GetPlaystyleString(playstyle, activity_infotb);
-		end
-		if playstyleString and playstyleString ~= "" then
-			concat_tb[#concat_tb+1] = "\n|cff8080cc"
-			concat_tb[#concat_tb+1] = playstyleString
-			concat_tb[#concat_tb+1] = "|r"
-		end
-	end
-
-
 	local ds = info.requiredDungeonScore
 	if ds ~= 0 then
 		concat_tb[#concat_tb + 1] = " |cff8080ccDS:"
