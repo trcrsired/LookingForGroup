@@ -169,8 +169,18 @@ function LookingForGroup_Options.req_main(auto_accept,filters,back_list,LFGList,
 		if not entryinfo then
 			break
 		end
-		local entryinfo = LFGList.GetActiveEntryInfo()
-		entryinfo.activityInfo = LFGList.GetActivityInfoTable(entryinfo.activityID)
+		local activityIDs, activityIDsInfos = LookingForGroup.getActivityIDsInTable(entryinfo, true)
+		if not activityIDs then
+			break
+		end
+		if #activityIDsInfos == 0 then
+			break
+		end
+		local activityInfo = activityIDsInfos[1]
+		entryinfo.activityIDs = activityIDs
+		entryinfo.activityIDsInfos = activityIDsInfos
+		entryinfo.activityInfo = activityInfo
+		entryinfo.activityID = activityInfo.activityID
 		if not hardware then
 			local duration = entryinfo.duration - 60
 			if duration < 0 then
@@ -212,7 +222,7 @@ function LookingForGroup_Options.req_main(auto_accept,filters,back_list,LFGList,
 				end
 			end
 		elseif yd=="LFG_Relist_Timer" then
-			LFGList.UpdateListing(entryinfo.activityID,entryinfo.requiredItemLevel,entryinfo.requiredHonorLevel,entryinfo.autoAccept,entryinfo.privateGroup,entryinfo.questID)
+			LFGList.UpdateListing(activityInfo.activityID,entryinfo.requiredItemLevel,entryinfo.requiredHonorLevel,entryinfo.autoAccept,entryinfo.privateGroup,entryinfo.questID)
 		else
 			wipe(app)
 			wipe(app_invited)

@@ -420,7 +420,7 @@ function LookingForGroup.getActivityIDsInTable(tb, infos)
 	end
 	local activityIDs = tb.activityIDs or {}
 	local activityID = tb.activityID
-	if activityID then
+	if activityID and next(activityIDs) == nil then
 		activityIDs[#activityIDs + 1] = activityID
 	end
 	if infos then
