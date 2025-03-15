@@ -111,7 +111,7 @@ function Hook:QueueStatusEntry_SetUpLFGListApplication(entry,resultID)
 		if i~=1 then
 			concat_tb[#concat_tb+1] = "\n"
 		end
-		concat_tb[#concat_tb+1] = C_LFGList.GetActivityInfoTable(activityID[i]).fullName
+		concat_tb[#concat_tb+1] = C_LFGList.GetActivityInfoTable(activityIDs[i]).fullName
 	end
 	concat_tb[#concat_tb+1] = "\n|cff00ffff"
 	concat_tb[#concat_tb+1] = numMembers
