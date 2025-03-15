@@ -203,13 +203,15 @@ local concat_tb = {}
 
 function LookingForGroup_Options.tooltip_show_dungeonscore_info(DungeonScoreInfo)
 	if DungeonScoreInfo then
-		if DungeonScoreInfo.mapName:len() ~=0 then
-			if(DungeonScoreInfo.mapScore == 0) then
-				GameTooltip:AddDoubleLine(DUNGEON_SCORE_PER_DUNGEON_NO_RATING:format(DungeonScoreInfo.mapName, DungeonScoreInfo.mapScore));
-			elseif (DungeonScoreInfo.finishedSuccess) then 
-				GameTooltip:AddDoubleLine(DUNGEON_SCORE_DUNGEON_RATING:format(DungeonScoreInfo.mapName, DungeonScoreInfo.mapScore, DungeonScoreInfo.bestRunLevel));
-			else 
-				GameTooltip:AddDoubleLine(DUNGEON_SCORE_DUNGEON_RATING_OVERTIME:format(DungeonScoreInfo.mapName, DungeonScoreInfo.mapScore, DungeonScoreInfo.bestRunLevel));
+		if DungeonScoreInfo.mapName then
+			if DungeonScoreInfo.mapName:len() ~=0 then
+				if(DungeonScoreInfo.mapScore == 0) then
+					GameTooltip:AddDoubleLine(DUNGEON_SCORE_PER_DUNGEON_NO_RATING:format(DungeonScoreInfo.mapName, DungeonScoreInfo.mapScore));
+				elseif (DungeonScoreInfo.finishedSuccess) then 
+					GameTooltip:AddDoubleLine(DUNGEON_SCORE_DUNGEON_RATING:format(DungeonScoreInfo.mapName, DungeonScoreInfo.mapScore, DungeonScoreInfo.bestRunLevel));
+				else 
+					GameTooltip:AddDoubleLine(DUNGEON_SCORE_DUNGEON_RATING_OVERTIME:format(DungeonScoreInfo.mapName, DungeonScoreInfo.mapScore, DungeonScoreInfo.bestRunLevel));
+				end
 			end
 		end
 	end

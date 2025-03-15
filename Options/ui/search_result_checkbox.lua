@@ -516,7 +516,8 @@ function LookingForGroup_Options.updatetitle(obj)
 
 		local playstyle = info.playstyle
 		if playstyle ~= 0 then
-			local playstyleString
+			local playstyleString = C_LFGList.GetPlaystyleString(playstyle, activity_infotb)
+--[[
 			if LookingForGroup.db.profile.hardware then
 				if playstyle == 1 then
 					playstyleString=GUILD_PLAYSTYLE_CASUAL
@@ -528,6 +529,7 @@ function LookingForGroup_Options.updatetitle(obj)
 			else
 				playstyleString = C_LFGList.GetPlaystyleString(playstyle, activity_infotb);
 			end
+]]
 			if playstyleString and playstyleString ~= "" then
 				concat_tb[#concat_tb+1] = "\n|cff8080cc"
 				concat_tb[#concat_tb+1] = playstyleString
@@ -783,7 +785,8 @@ function LookingForGroup_Options.search_result_tooltip_coroutine(frame,id,detail
 			end
 			local age = info.age
 			delta = age-GetTime()
-			local activity_infotb = C_LFGList.GetActivityInfoTable(info.activityID)
+--			local activity_infotb = C_LFGList.GetActivityInfoTable(info.activityID)
+			local activityIDs,activityIDsInfos = LookingForGroup.getActivityIDsInTable(info,true)
 			local iLvl = info.requiredItemLevel
 			local questID = info.questID
 			local addon
@@ -793,11 +796,14 @@ function LookingForGroup_Options.search_result_tooltip_coroutine(frame,id,detail
 				GameTooltip:AddLine(info.name,nil,nil,nil,true)
 			end
 			GameTooltip:AddDoubleLine(convert_sec_to_xx_xx_xx(age),id,nil,nil,nil,0.5, 0.5, 0.8,true)
-			local gid = activity_infotb.groupFinderActivityGroupID
-			if gid == nil then
-				gid = "?"
+			for i=1,#activityIDsInfos do
+				local activity_infotb = activityIDsInfos[i]
+				local gid = activity_infotb.groupFinderActivityGroupID
+				if gid == nil then
+					gid = "?"
+				end
+				GameTooltip:AddDoubleLine(gid,activity_infotb.activityID,nil,nil,nil,0.5, 0.5, 0.8,true)
 			end
-			GameTooltip:AddDoubleLine(gid,info.activityID,nil,nil,nil,0.5, 0.5, 0.8,true)
 			if info.requiredHonorLevel ~= 0 then
 				GameTooltip:AddDoubleLine(LFG_LIST_HONOR_LEVEL_INSTR_SHORT, info.requiredHonorLevel, nil,nil,nil,  0.5, 0.5, 0.8)
 			end
@@ -828,7 +834,7 @@ function LookingForGroup_Options.search_result_tooltip_coroutine(frame,id,detail
 				end
 			end
 			LookingForGroup_Options.tooltip_show_dungeonscore_info(info.leaderDungeonScoreInfo)
-			LookingForGroup_Options.tooltip_show_pvp_rating_info(info.leaderPvpRatingInfo)
+			--LookingForGroup_Options.tooltip_show_pvp_rating_info(info.leaderPvpRatingInfo)
 			local numMembers = info.numMembers
 			local tank,healer,damager,tank_tb,healer_tb,damager_tb = LookingForGroup_Options.init_roles(id,numMembers)
 			wipe(concat_tb)
@@ -841,7 +847,11 @@ function LookingForGroup_Options.search_result_tooltip_coroutine(frame,id,detail
 			add_role(tank_tb,"|T337497:16:16:0:0:64:64:0:19:22:41|t",tank)
 			add_role(healer_tb,"|T337497:16:16:0:0:64:64:20:39:1:20|t",healer)
 			add_role(damager_tb,"|T337497:16:16:0:0:64:64:20:39:22:41|t",damager)
-			cache=LookingForGroup_Options.handle_encounters(C_LFGList.GetSearchResultEncounterInfo(id),cache,info,activity_infotb.groupFinderActivityGroupID,activity_infotb.categoryID,activity_infotb.shortName)
+			for i=1,#activityIDsInfos do
+				local activity_infotb = activityIDsInfos[i]
+				local resultEncountersInfo = C_LFGList.GetSearchResultEncounterInfo(id)
+				cache=LookingForGroup_Options.handle_encounters(resultEncountersInfo,cache,info,activity_infotb.groupFinderActivityGroupID,activity_infotb.categoryID,activity_infotb.shortName)
+			end
 			local friendlist = LFGListSearchEntryUtil_GetFriendList(id)
 			if friendlist:len()~=0 then
 				GameTooltip:AddLine(" ")

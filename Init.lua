@@ -414,11 +414,33 @@ end,
 
 setmetatable(LookingForGroup.C_LFGList, { __index = C_LFGList })
 
-function LookingForGroup.getActivityIDsInTable(tb)
+function LookingForGroup.getActivityIDsInTable(tb, infos)
+	if tb == nil then
+		return {}
+	end
 	local activityIDs = tb.activityIDs or {}
 	local activityID = tb.activityID
 	if activityID then
-		activityIDs[#activityIDs + 1] =activityID
+		activityIDs[#activityIDs + 1] = activityID
 	end
-	return activityIDs
+	if infos then
+		if type(infos) == "table" then
+			wipe(infos)
+		else
+			infos = {}
+		end
+		local C_LFGList_GetActivityInfoTable = C_LFGList.GetActivityInfoTable
+		for i=1,#activityIDs do
+			local activityID = activityIDs[i]
+			local infoi = C_LFGList_GetActivityInfoTable(activityID)
+			if infoi == nil then
+				infoi = {}
+			end
+			if infoi.activityID == nil then
+				infoi.activityID = activityID
+			end
+			infos[i]=infoi
+		end
+	end
+	return activityIDs, infos
 end
