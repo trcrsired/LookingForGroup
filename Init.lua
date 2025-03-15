@@ -413,3 +413,12 @@ end,
 }
 
 setmetatable(LookingForGroup.C_LFGList, { __index = C_LFGList })
+
+function LookingForGroup.getActivityIDsInTable(tb)
+	local activityIDs = tb.activityIDs or {}
+	local activityID = tb.activityID
+	if activityID then
+		activityIDs[#activityIDs + 1] =activityID
+	end
+	return activityIDs
+end

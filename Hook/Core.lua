@@ -1,6 +1,8 @@
 local LookingForGroup = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup")
 local Hook = LookingForGroup:NewModule("Hook","AceHook-3.0")
 
+local getActivityIDsInTable = LookingForGroup.getActivityIDsInTable
+
 function Hook:OnInitialize()
 	if WOW_PROJECT_ID == 1 or WOW_PROJECT_ID >= 11 then
 	if QuestObjectiveSetupBlockButton_FindGroup then
@@ -103,7 +105,14 @@ function Hook:QueueStatusEntry_SetUpLFGListApplication(entry,resultID)
 	local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
 	local concat_tb = {}
 	local member_counts = C_LFGList.GetSearchResultMemberCounts(resultID)
-	concat_tb[#concat_tb+1] = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID).fullName
+
+	local activityIDs = getActivityIDsInTable(searchResultInfo)
+	for i=1,#activityIDs do
+		if i~=1 then
+			concat_tb[#concat_tb+1] = "\n"
+		end
+		concat_tb[#concat_tb+1] = C_LFGList.GetActivityInfoTable(activityID[i]).fullName
+	end
 	concat_tb[#concat_tb+1] = "\n|cff00ffff"
 	concat_tb[#concat_tb+1] = numMembers
 	concat_tb[#concat_tb+1] = "("
@@ -120,26 +129,14 @@ function Hook:QueueStatusEntry_SetUpLFGListActiveEntry(entry)
 	local activeEntryInfo = C_LFGList.GetActiveEntryInfo();
 
 	local concat_tb = {}
-	
-	local C_LFGList_GetActivityInfoTable = C_LFGList.GetActivityInfoTable
-	local activityID = activeEntryInfo.activityID
-	if activityID then
-		local activityName = C_LFGList_GetActivityInfoTable(activeEntryInfo.activityID).fullName
+
+	local activityIDs = getActivityIDsInTable(activeEntryInfo)
+	for i=1,#activityIDs do
+		local activityName = C_LFGList_GetActivityInfoTable(activityIDs[i]).fullName
 		if activityName then
 			concat_tb[#concat_tb+1] = "|cff8080cc"
 			concat_tb[#concat_tb+1] = activityName
-			concat_tb[#concat_tb+1] ="|r\n"
-		end
-	end
-	local activityIDs = activeEntryInfo.activityIDs
-	if activityIDs then
-		for i=1,#activityIDs do
-			local activityName = C_LFGList_GetActivityInfoTable(activityIDs[i]).fullName
-			if activityName then
-				concat_tb[#concat_tb+1] = "|cff8080cc"
-				concat_tb[#concat_tb+1] = activityName
-				concat_tb[#concat_tb+1] ="|r\n"	
-			end
+			concat_tb[#concat_tb+1] ="|r\n"	
 		end
 	end
 	local numApplicants,numActiveApplicants = C_LFGList.GetNumApplicants()
