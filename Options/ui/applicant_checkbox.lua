@@ -214,14 +214,38 @@ function LookingForGroup_Options.tooltip_show_dungeonscore_info(DungeonScoreInfo
 				end
 			end
 		end
+		for i=1,#DungeonScoreInfo do
+			local info = DungeonScoreInfo[i]
+			if info.mapName then
+				if info.mapName:len() ~=0 then
+					if(info.mapScore == 0) then
+						GameTooltip:AddDoubleLine(DUNGEON_SCORE_PER_DUNGEON_NO_RATING:format(info.mapName, info.mapScore));
+					elseif (info.finishedSuccess) then 
+						GameTooltip:AddDoubleLine(DUNGEON_SCORE_DUNGEON_RATING:format(info.mapName, info.mapScore, info.bestRunLevel));
+					else 
+						GameTooltip:AddDoubleLine(DUNGEON_SCORE_DUNGEON_RATING_OVERTIME:format(info.mapName, info.mapScore, info.bestRunLevel));
+					end
+				end
+			end
+		end
 	end
 end
 
 function LookingForGroup_Options.tooltip_show_pvp_rating_info(pvpRatingForEntry)
 	if pvpRatingForEntry then
 		local tier = pvpRatingForEntry.tier
-		GameTooltip_AddNormalLine(GameTooltip, PVP_RATING_GROUP_FINDER:format(pvpRatingForEntry.activityName, pvpRatingForEntry.rating,
-		string.format("|cff8080cc%d|r[%s]",tier,PVPUtil.GetTierName(tier))))
+		if tier then
+			GameTooltip_AddNormalLine(GameTooltip, PVP_RATING_GROUP_FINDER:format(pvpRatingForEntry.activityName, pvpRatingForEntry.rating,
+			string.format("|cff8080cc%d|r[%s]",tier,PVPUtil.GetTierName(tier))))
+		end
+		for i=1,#pvpRatingForEntry do
+			local entry = pvpRatingForEntry[i]
+			tier = entry.tier
+			if tier then
+			GameTooltip_AddNormalLine(GameTooltip, PVP_RATING_GROUP_FINDER:format(entry.activityName, entry.rating,
+			string.format("|cff8080cc%d|r[%s]",tier,PVPUtil.GetTierName(tier))))
+			end
+		end
 	end
 end
 

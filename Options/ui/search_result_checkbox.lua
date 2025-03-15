@@ -833,8 +833,15 @@ function LookingForGroup_Options.search_result_tooltip_coroutine(frame,id,detail
 					GameTooltip:AddLine(comment,0.5,0.5,0.8,true)
 				end
 			end
+			local partyGUID = info.partyGUID
+			if partyGUID then
+				GameTooltip:AddLine(partyGUID,0.5,0.5,0.8,true)
+			end
+			if info.newPlayerFriendly then
+				GameTooltip:AddLine("NEWBIE",0.5,0.5,0.8,true)
+			end
 			LookingForGroup_Options.tooltip_show_dungeonscore_info(info.leaderDungeonScoreInfo)
-			--LookingForGroup_Options.tooltip_show_pvp_rating_info(info.leaderPvpRatingInfo)
+			LookingForGroup_Options.tooltip_show_pvp_rating_info(info.leaderPvpRatingInfo)
 			local numMembers = info.numMembers
 			local tank,healer,damager,tank_tb,healer_tb,damager_tb = LookingForGroup_Options.init_roles(id,numMembers)
 			wipe(concat_tb)
