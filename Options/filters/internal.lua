@@ -146,8 +146,11 @@ end,function(profile)
 end)
 
 LookingForGroup_Options.RegisterSimpleFilter("find",function(info)
-	if info.numMembers * 3 < C_LFGList.GetActivityInfoTable(info.activityID).maxNumPlayers * 2 then
-		return 1
+	local activityIDs = LookingForGroup.getActivityIDsInTable(info)
+	for i=1,#activityIDs do
+		if info.numMembers * 3 < C_LFGList.GetActivityInfoTable(activityIDs[i]).maxNumPlayers * 2 then
+			return 1
+		end
 	end
 end,function(profile)
 	return profile.a.complete
@@ -223,22 +226,25 @@ end)
 LookingForGroup_Options.RegisterSimpleFilter("spam",function(info)
 	local numMembers = info.numMembers
 	if numMembers < 2 then
-		local categoryID = C_LFGList.GetActivityInfoTable(info.activityID).categoryID
-		local age = info.age
-		if numMembers == 1 then
-			if 3600 < age then
-				return 2
-			else
-				if categoryID == 3 or categoryID == 9 then
-					if 300 < age then
-						return 2
-					end
-				end
-			end
-		elseif numMembers == 2 then
-			if categoryID == 3 or categoryID == 9 then
+		local activityIDs = LookingForGroup.getActivityIDsInTable(info)
+		for i=1,#activityIDs do
+			local categoryID = C_LFGList.GetActivityInfoTable(activityIDs[i]).categoryID
+			local age = info.age
+			if numMembers == 1 then
 				if 3600 < age then
 					return 2
+				else
+					if categoryID == 3 or categoryID == 9 then
+						if 300 < age then
+							return 2
+						end
+					end
+				end
+			elseif numMembers == 2 then
+				if categoryID == 3 or categoryID == 9 then
+					if 3600 < age then
+						return 2
+					end
 				end
 			end
 		end
@@ -262,8 +268,13 @@ end)
 
 LookingForGroup_Options.RegisterSimpleFilter("spam",function(info,profile)
 	local iLvl = info.requiredItemLevel
-	if iLvl~=0 and iLvl < C_LFGList.GetActivityInfoTable(info.activityID).ilvlSuggestion then
-		return 8
+	if iLvl~=0 then
+		local activityIDs = LookingForGroup.getActivityIDsInTable(info)
+		for i=1,#activityIDs do
+			if iLvl < C_LFGList.GetActivityInfoTable(activityIDs[i]).ilvlSuggestion then
+				return 8
+			end
+		end
 	end
 end,function(profile)
 	return not profile.spam_filter_ilvl
@@ -277,8 +288,11 @@ function()
 end)
 
 LookingForGroup_Options.RegisterSimpleFilter("spam",function(info)
-	if C_LFGList.GetActivityInfoTable(info.activityID).groupFinderActivityGroupID == 136 then
-		return 8
+	local activityIDs = LookingForGroup.getActivityIDsInTable(info)
+	for i=1,#activityIDs do
+		if C_LFGList.GetActivityInfoTable(activityIDs[i]).groupFinderActivityGroupID == 136 then
+			return 8
+		end
 	end
 end,function(profile)
 	return not profile.spam_filter_activity and profile.a.group ~= 136
@@ -327,11 +341,14 @@ end)
 
 LookingForGroup_Options.RegisterSimpleFilter("find",function(info)
 	if info.numMembers == 4 and 2400 < info.age then
-		local categoryID = C_LFGList.GetActivityInfoTable(info.activityID).categoryID
-		if categoryID == 2 then
-			local tb = C_LFGList.GetSearchResultMemberCounts(info.searchResultID)
-			if tb.TANK == 1 and tb.HEALER == 1 then
-				return 8
+		local activityIDs = LookingForGroup.getActivityIDsInTable(info)
+		for i=1,#activityIDs do
+			local categoryID = C_LFGList.GetActivityInfoTable(activityIDs[i]).categoryID
+			if categoryID == 2 then
+				local tb = C_LFGList.GetSearchResultMemberCounts(info.searchResultID)
+				if tb.TANK == 1 and tb.HEALER == 1 then
+					return 8
+				end
 			end
 		end
 	end
@@ -340,54 +357,63 @@ end,function(profile)
 end)
 
 LookingForGroup_Options.RegisterSimpleFilter("find",function(info,profile)
-	local activityID = info.activityID
-	local activity_infotb = C_LFGList.GetActivityInfoTable(activityID)
-	local fullName, shortName, groupID = activity_infotb.fullName,activity_infotb.shortName,activity_infotb.groupFinderActivityGroupID
-	local fsname = fullName or shortName
+-- Todo fix here
 	local a = profile.a
 	local val = a.activities_blacklist and 1 or 0
 	local reverse_val = val == 1 and 0 or 1
-	if a.activity then
-		if a.activity == activityID then
-			return val
-		end
-	elseif a.group then
-		if a.group == groupID then
-			return val
-		end
-	end
-	local activities = a.activities
-	if activities and next(activities) then
-		for i=1,#activities do
-			local ctv = activities[i]
-			if issubstr(fsname,ctv) then
+	local activityIDs = LookingForGroup.getActivityIDsInTable(info)
+	for i=1,#activityIDs do
+		local activityID = activityIDs[i]
+		local activity_infotb = C_LFGList.GetActivityInfoTable(activityID)
+		local fullName, shortName, groupID = activity_infotb.fullName,activity_infotb.shortName,activity_infotb.groupFinderActivityGroupID
+		local fsname = fullName or shortName
+
+		if a.activity then
+			if a.activity == activityID then
+				return val
+			end
+		elseif a.group then
+			if a.group == groupID then
 				return val
 			end
 		end
-	elseif a.activity == nil and a.group == nil then
-		return val
+		local activities = a.activities
+		if activities and next(activities) then
+			for i=1,#activities do
+				local ctv = activities[i]
+				if issubstr(fsname,ctv) then
+					return val
+				end
+			end
+		elseif a.activity == nil and a.group == nil then
+			return val
+		end
 	end
 	return reverse_val
 end)
 
 LookingForGroup_Options.RegisterSimpleFilter("find",function(info,profile,membercounts)
 	local this_group = C_LFGList.GetSearchResultMemberCounts(info.searchResultID)
-	local activity_infotb = C_LFGList.GetActivityInfoTable(info.activityID)
-	local maxPlayers = activity_infotb.maxNumPlayers
+
 	local GetClassInfo = GetClassInfo
 	local numclasses = GetNumClasses()
-	if maxPlayers < numclasses then
-		for i=1,numclasses do
-			local id,class = GetClassInfo(i)
-			if 1 < this_group[class] then
-				return 1
+	local activityIDs = LookingForGroup.getActivityIDsInTable(info)
+	for j=1,activityIDs do
+		local activity_infotb = C_LFGList.GetActivityInfoTable(activityIDs[j])
+		local maxPlayers = activity_infotb.maxNumPlayers
+		if maxPlayers < numclasses then
+			for i=1,numclasses do
+				local id,class = GetClassInfo(i)
+				if 1 < this_group[class] then
+					return 1
+				end
 			end
 		end
-	end
-	for i=1,numclasses do
-		local id,class = GetClassInfo(i)
-		if this_group[class] == 0 and membercounts[class] ~= 0 then
-			return
+		for i=1,numclasses do
+			local id,class = GetClassInfo(i)
+			if this_group[class] == 0 and membercounts[class] ~= 0 then
+				return
+			end
 		end
 	end
 	return 1
@@ -441,9 +467,12 @@ LookingForGroup_Options.RegisterFilter("spam",function(infos,bts,first,profile)
 			break
 		end
 		if not categoryID then
-			categoryID = C_LFGList.GetActivityInfoTable(info.activityID).categoryID
-			if categoryID == 1 then
-				return
+			local activityIDs = LookingForGroup.getActivityIDsInTable(info)
+			for j=1,activityIDs do	
+				categoryID = C_LFGList.GetActivityInfoTable(activityIDs[j]).categoryID
+				if categoryID == 1 then
+					return
+				end
 			end
 		end
 		if info.questID then

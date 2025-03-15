@@ -131,25 +131,16 @@ function Event.show_invite_dialog(resultID)
 	local concat_tb = {}
 	local member_counts = C_LFGList.GetSearchResultMemberCounts(resultID)
 
-	local activityID = searchResultInfo.activityID
-	if activityID then
-		local activityName = C_LFGList.GetActivityInfoTable(activityID).fullName
-		if activityName then
-			concat_tb[#concat_tb+1] = activityName
+	local activityIDs = LookingForGroup.getActivityIDsInTable(searchResultInfo)
+	local nothing = true
+	for i=1,#activityIDs do
+		local activityName = C_LFGList.GetActivityInfoTable(activityIDs[i]).fullName
+		if nothing then
+			nothing = false
+		else
+			concat_tb[#concat_tb+1] = '\n'
 		end
-	end
-	local activityIDs = searchResultInfo.activityIDs
-	if activityIDs then
-		local nothing = true
-		for i=1,#activityIDs do
-			local activityName = C_LFGList.GetActivityInfoTable(activityID).fullName
-			if nothing then
-				nothing = false
-			else
-				concat_tb[#concat_tb+1] = '\n'
-			end
-			concat_tb[#concat_tb+1] = activityName
-		end
+		concat_tb[#concat_tb+1] = activityName
 	end
 	concat_tb[#concat_tb+1] = '\n|cff00ffff'
 	concat_tb[#concat_tb+1] = searchResultInfo.numMembers

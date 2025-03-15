@@ -1,4 +1,6 @@
-local LookingForGroup_Options = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup_Options")
+local AceAddon = LibStub("AceAddon-3.0")
+local LookingForGroup = AceAddon:GetAddon("LookingForGroup")
+local LookingForGroup_Options = AceAddon:GetAddon("LookingForGroup_Options")
 
 LookingForGroup_Options.RegisterSimpleFilterExpensive("cr",function(info,profile,func)
 	if func(info.leaderName:lower()) then
@@ -257,13 +259,23 @@ AceGUI:RegisterWidgetType("LFG_OPT_CRE",function()
 					for i=1,#val do
 						local info = C_LFGList_GetSearchResultInfo(val[i])
 						if info and not info.isDelisted then
-							local infotb = C_LFGList_GetActivityInfoTable(info.activityID)
 							wipe(concat_tb)
 							concat_tb[1]="|cff00ff00"
 							concat_tb[2]=info.numMembers
 							concat_tb[3]="|r "
 							concat_tb[4]=info.leaderName
-							GameTooltip:AddDoubleLine(table.concat(concat_tb),infotb.fullName or infotb.shortName,0.5,0.5,0.8,true)
+							local activityIDs = LookingForGroup.getActivityIDsInTable(info)
+							for j=1,#activityIDs do
+								local infotb = C_LFGList_GetActivityInfoTable(activityIDs[j])
+								local activityname = infotb.fullName or infotb.shortName
+								local groupinfo
+								if j==1 then
+									groupinfo = table.concat(concat_tb)
+								else
+									groupinfo = " "
+								end
+								GameTooltip:AddDoubleLine(groupinfo,activityname,0.5,0.5,0.8,true)
+							end
 						end
 					end
 					GameTooltip:Show()

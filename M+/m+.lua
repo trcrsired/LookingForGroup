@@ -1,4 +1,6 @@
-local LFG_OPT = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup_Options")
+local AceAddon = LibStub("AceAddon-3.0")
+local LFG = AceAddon:GetAddon("LookingForGroup")
+local LFG_OPT = AceAddon:GetAddon("LookingForGroup_Options")
 
 local activity_infotb = C_LFGList.GetActivityInfoTable(459)
 
@@ -7,15 +9,18 @@ local label_name = activity_infotb.shortName
 LFG_OPT.mythic_keystone_label_name = label_name
 
 LFG_OPT.RegisterSimpleFilter("find",function(info,profile,val)
-	local info_tb = C_LFGList.GetActivityInfoTable(info.activityID)
-	local shortname = info_tb.shortName
-	if val == 1 then
-		if shortname ~= label_name then
-			return 1
-		end
-	else
-		if shortname == label_name then
-			return 1
+	local activityIDs = LookingForGroup.getActivityIDsInTable(info)
+	for i=1,#activityIDs do
+		local info_tb = C_LFGList.GetActivityInfoTable(activityIDs[i])
+		local shortname = info_tb.shortName
+		if val == 1 then
+			if shortname ~= label_name then
+				return 1
+			end
+		else
+			if shortname == label_name then
+				return 1
+			end
 		end
 	end
 end,function(profile)

@@ -509,11 +509,7 @@ function LookingForGroup_Options.updatetitle(obj)
 	if need_line_is_war_mode then
 		concat_tb[#concat_tb+1] = "\n"
 	end
-	local activityID = info.activityID
-	local activityIDs = info.activityIDs or {}
-	if activityID then
-		activityIDs[#activityIDs+1] = activityID
-	end
+	local activityIDs = LookingForGroup.getActivityIDsInTable(info)
 	for i=1,#activityIDs do
 		local activity_infotb = C_LFGList.GetActivityInfoTable(activityIDs[i])
 		concat_tb[#concat_tb + 1] = activity_infotb.fullName
