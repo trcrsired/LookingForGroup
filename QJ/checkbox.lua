@@ -1,4 +1,5 @@
 local AceGUI = LibStub("AceGUI-3.0")
+local LookingForGroup = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup")
 local LookingForGroup_Options = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup_Options")
 
 local ENTRY_MENU
@@ -120,7 +121,7 @@ AceGUI:RegisterWidgetType("LookingForGroup_quick_join_checkbox", function()
 				end
 			else
 				local val = user.social_val
-				EasyMenu(GetSearchEntryMenu(val), LFGListFrameDropDown, "cursor" , 20, 0, "MENU")
+				LookingForGroup.EasyMenu(GetSearchEntryMenu(val), LookingForGroup.DropDown, "cursor" , 20, 0, "MENU")
 			end
 		end)
 		check.width = "fill"

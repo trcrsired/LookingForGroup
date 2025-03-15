@@ -904,7 +904,7 @@ AceGUI:RegisterWidgetType("LookingForGroup_search_result_checkbox", function()
 			end
 			AlignImage(obj)
 		else
-			EasyMenu(GetSearchEntryMenu(user.val), LFGListFrameDropDown, "cursor" , 0, 0, "MENU")
+			LookingForGroup.EasyMenu(GetSearchEntryMenu(user.val), LookingForGroup.DropDown, "cursor" , 0, 0, "MENU")
 		end
 	end)
 	check.SetDisabled = LookingForGroup_Options.disable

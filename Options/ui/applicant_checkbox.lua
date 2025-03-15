@@ -1,4 +1,5 @@
 local AceGUI = LibStub("AceGUI-3.0")
+local LookingForGroup = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup")
 local LookingForGroup_Options = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup_Options")
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
@@ -464,7 +465,7 @@ AceGUI:RegisterWidgetType("LookingForGroup_applicant_checkbox", function()
 			local info = user.applicantInfo
 			local numMembers = info.numMembers
 			if numMembers == 1 then
-				EasyMenu(GetApplicantMemberMenu(info.LFGList,info.applicantID,1), LFGListFrameDropDown, "cursor" , 0, 0, "MENU")
+				LookingForGroup.EasyMenu(GetApplicantMemberMenu(info.LFGList,info.applicantID,1), LookingForGroup.DropDown, "cursor" , 0, 0, "MENU")
 			else
 				local cursor_x,cursor_y = GetCursorPosition()
 				local desc = obj.desc
@@ -475,7 +476,7 @@ AceGUI:RegisterWidgetType("LookingForGroup_applicant_checkbox", function()
 				if numMembers < pos then
 					pos = numMembers
 				end
-				EasyMenu(GetApplicantMemberMenu(info.LFGList,info.applicantID,pos), LFGListFrameDropDown, "cursor" , 0, 0, "MENU")
+				LookingForGroup.EasyMenu(GetApplicantMemberMenu(info.LFGList,info.applicantID,pos), LookingForGroup.DropDown, "cursor" , 0, 0, "MENU")
 			end
 		end
 	end)
