@@ -132,7 +132,7 @@ function Hook:QueueStatusEntry_SetUpLFGListActiveEntry(entry)
 
 	local activityIDs = getActivityIDsInTable(activeEntryInfo)
 	for i=1,#activityIDs do
-		local activityName = C_LFGList_GetActivityInfoTable(activityIDs[i]).fullName
+		local activityName = C_LFGList.GetActivityInfoTable(activityIDs[i]).fullName
 		if activityName then
 			concat_tb[#concat_tb+1] = "|cff8080cc"
 			concat_tb[#concat_tb+1] = activityName
