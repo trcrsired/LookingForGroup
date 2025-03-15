@@ -114,7 +114,7 @@ function Hook:QueueStatusEntry_SetUpLFGListApplication(entry,resultID)
 		concat_tb[#concat_tb+1] = C_LFGList.GetActivityInfoTable(activityIDs[i]).fullName
 	end
 	concat_tb[#concat_tb+1] = "\n|cff00ffff"
-	concat_tb[#concat_tb+1] = numMembers
+	concat_tb[#concat_tb+1] = searchResultInfo.numMembers
 	concat_tb[#concat_tb+1] = "("
 	concat_tb[#concat_tb+1] = member_counts.TANK
 	concat_tb[#concat_tb+1] = "/"

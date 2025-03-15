@@ -57,19 +57,26 @@ function LookingForGroup_Options.update_editing()
 		end
 		s.quest_id = info.questID
 		s.auto_accept,s.private = info.autoAccept or nil, info.privateGroup or nil
-		local activityID = info.activityID
-		local activity_infotb = C_LFGList.GetActivityInfoTable(activityID)
-		local categoryID, groupID, filters = activity_infotb.categoryID,activity_infotb.groupFinderActivityGroupID,activity_infotb.filters
-		if bit.band(filters,Enum.LFGListFilter.Recommended) == 1 then
+-- Todo: Add multi activity support
+		local activityIDs, activityIDsInfos = LookingForGroup.getActivityIDsInTable(info, true)
+		if not activityIDsInfos or #activityIDsInfos == 0 then
+			wipe(profile.a)
 			profile.recommended = nil
-		elseif bit.band(filters,Enum.LFGListFilter.NotRecommended) == 1 then
-			profile.recommended = false
 		else
-			profile.recommended = true
+			local activity_infotb = activityIDsInfos[1]
+			local activityID = activity_infotb.activityID
+			local categoryID, groupID, filters = activity_infotb.categoryID,activity_infotb.groupFinderActivityGroupID,activity_infotb.filters
+			if bit.band(filters,Enum.LFGListFilter.Recommended) == 1 then
+				profile.recommended = nil
+			elseif bit.band(filters,Enum.LFGListFilter.NotRecommended) == 1 then
+				profile.recommended = false
+			else
+				profile.recommended = true
+			end
+			local a = profile.a
+			wipe(a)
+			a.category,a.group,a.activity=categoryID,groupID,activityID
 		end
-		local a = profile.a
-		wipe(a)
-		a.category,a.group,a.activity=categoryID,groupID,activityID
 	else
 		C_LFGList.ClearCreationTextFields()
 	end
@@ -431,7 +438,7 @@ LookingForGroup_Options:push("find",{
 			type = "select",
 			values = function()
 				local hardware_strings =  {"",NONE,GUILD_PLAYSTYLE_CASUAL,GUILD_PLAYSTYLE_MODERATE,GUILD_PLAYSTYLE_HARDCORE}
-				if LookingForGroup.db.profile.hardware then
+				if false then
 					return hardware_strings
 				else
 					local a = LookingForGroup_Options.db.profile.a
@@ -444,7 +451,7 @@ LookingForGroup_Options:push("find",{
 						for i=1,4 do
 							local str = C_LFGList_GetPlayStyleString(i-1,activity_infotb)
 							if str == nil or str:len() == 0 then
-								str=NONE
+								str=hardware_strings[i+1]
 							end
 							tb[i+1]=str
 						end
