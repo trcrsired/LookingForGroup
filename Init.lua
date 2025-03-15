@@ -386,3 +386,30 @@ function LookingForGroup.IsLookingForGroupEnabled()
 	end
 	return true
 end
+
+LookingForGroup.C_LFGList =
+{
+CreateListing = function(createData)
+	if LookingForGroup.db.profile.api_wod_createlisting then
+		local activityIDs = createData.activityIDs
+		local activityid
+		if type(activityIDs) == "table" then
+			activityid = activityIDs[1]
+		end
+		C_LFGList.CreateListing(activityid,
+		createData.requiredItemLevel or 0,
+		createData.requiredHonorLevel or 0,
+		createData.isAutoAccept or false,
+		createData.isPrivateGroup or false,
+		createData.questID or 0,
+		createData.requiredDungeonScore or 0,
+		createData.requiredPvpRating or 0,
+		createData.playstyle,
+		createData.isCrossFactionListing)
+	else
+		C_LFGList.CreateListing(createData)
+	end
+end,
+}
+
+setmetatable(LookingForGroup.C_LFGList, { __index = C_LFGList })

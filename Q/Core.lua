@@ -1,5 +1,6 @@
 local LookingForGroup = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup")
 local LookingForGroup_Q = LibStub("AceAddon-3.0"):NewAddon("LookingForGroup_Q","AceEvent-3.0")
+local C_LFGList = LookingForGroup.C_LFGList
 
 function LookingForGroup_Q:OnInitialize()
 	local db = LookingForGroup.db
@@ -152,10 +153,23 @@ local function cofunc(quest_id,secure,gp)
 				if math.floor(ilvl) == ilvl then
 					ilvl = ilvl + 0.125
 				end
-				C_LFGList.CreateListing(activityID,ilvl,0,true,false)
+				-- Using the new CreateListing API with a table
+				C_LFGList.CreateListing({
+					activityIDs = { activityID }, -- Wrap activityID in a table
+					requiredItemLevel = ilvl, -- Set the calculated item level
+					isAutoAccept = true -- Auto-accept enabled
+					-- Fields with false or 0 values are omitted as they default to nil
+				})
 			else
 				C_LFGList.ClearCreationTextFields()
-				C_LFGList.CreateListing(activityID,ilvl,0,true,false,quest_id)
+				-- Using the new CreateListing API with a table and adding quest_id
+				C_LFGList.CreateListing({
+					activityIDs = { activityID }, -- Wrap activityID in a table
+					requiredItemLevel = ilvl, -- Set the calculated item level
+					isAutoAccept = true, -- Auto-accept enabled
+					questID = quest_id -- Include the quest ID in this branch
+					-- Fields with false or 0 values are omitted as they default to nil
+				})
 			end
 		end
 		acceptedtb.search = function()

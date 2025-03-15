@@ -35,8 +35,31 @@ function LookingForGroup_Options.listing(activity,playstyle,s,filters,back_list,
 			return
 		end
 	end
-	if listing(activity,s.minimum_item_level or 0,s.minimum_honor_level or 0,s.auto_accept or false,s.private or false,quest_id,
-	s.minimum_dungeon_score or 0,s.minimum_pvp_score or 0,playstyle,not s.notcrossfactiongroup) then
+	local listingresult = false
+	if LookingForGroup.db.profile.api_wod_createlisting then
+		listingresult = listing(activity,s.minimum_item_level or 0,s.minimum_honor_level or 0,s.auto_accept or false,s.private or false,quest_id,
+	s.minimum_dungeon_score or 0,s.minimum_pvp_score or 0,playstyle,not s.notcrossfactiongroup)
+	else
+		local activitytb
+		if type(activity) == "table" then
+			activitytb = activity
+		else
+			activitytb = {activity}
+		end
+		listingresult = listing({
+			activityIDs = activitytb,
+			questID = quest_id,
+			isAutoAccept = s.auto_accept,
+			isCrossFactionListing = not s.notcrossfactiongroup or nil,
+			isPrivateGroup = s.private,
+			playstyle = playstyle,
+			requiredDungeonScore = s.minimum_dungeon_score,
+			requiredItemLevel = s.minimum_item_level,
+			requiredHonorLevel = s.minimum_honor_level,
+			requiredPvpRating = s.minimum_honor_level,
+		})
+	end
+	if listingresult then
 		if not active then
 			coroutine.wrap(LookingForGroup_Options.req_main)(s.auto_accept,filters,back_list,provider,...)
 		end

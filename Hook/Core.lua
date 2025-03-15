@@ -118,11 +118,30 @@ end
 
 function Hook:QueueStatusEntry_SetUpLFGListActiveEntry(entry)
 	local activeEntryInfo = C_LFGList.GetActiveEntryInfo();
-	local activityName = C_LFGList.GetActivityInfoTable(activeEntryInfo.activityID).fullName
+
 	local concat_tb = {}
-	concat_tb[#concat_tb+1] = "|cff8080cc"
-	concat_tb[#concat_tb+1] = activityName
-	concat_tb[#concat_tb+1] ="|r\n"
+	
+	local C_LFGList_GetActivityInfoTable = C_LFGList.GetActivityInfoTable
+	local activityID = activeEntryInfo.activityID
+	if activityID then
+		local activityName = C_LFGList_GetActivityInfoTable(activeEntryInfo.activityID).fullName
+		if activityName then
+			concat_tb[#concat_tb+1] = "|cff8080cc"
+			concat_tb[#concat_tb+1] = activityName
+			concat_tb[#concat_tb+1] ="|r\n"
+		end
+	end
+	local activityIDs = activeEntryInfo.activityIDs
+	if activityIDs then
+		for i=1,#activityIDs do
+			local activityName = C_LFGList_GetActivityInfoTable(activityIDs[i]).fullName
+			if activityName then
+				concat_tb[#concat_tb+1] = "|cff8080cc"
+				concat_tb[#concat_tb+1] = activityName
+				concat_tb[#concat_tb+1] ="|r\n"	
+			end
+		end
+	end
 	local numApplicants,numActiveApplicants = C_LFGList.GetNumApplicants()
 	concat_tb[#concat_tb+1] = LFG_LIST_PENDING_APPLICANTS:format(numActiveApplicants)
 	local member_count_tb = GetGroupMemberCounts()

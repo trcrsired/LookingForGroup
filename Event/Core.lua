@@ -126,12 +126,31 @@ function Event:PARTY_INVITE_REQUEST(event, name, tank, healer, damage, isXRealm,
 end
 
 function Event.show_invite_dialog(resultID)
-	local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID);
-	local activityName = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID).fullName;
+	local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
 
 	local concat_tb = {}
 	local member_counts = C_LFGList.GetSearchResultMemberCounts(resultID)
-	concat_tb[#concat_tb+1] = activityName
+
+	local activityID = searchResultInfo.activityID
+	if activityID then
+		local activityName = C_LFGList.GetActivityInfoTable(activityID).fullName
+		if activityName then
+			concat_tb[#concat_tb+1] = activityName
+		end
+	end
+	local activityIDs = searchResultInfo.activityIDs
+	if activityIDs then
+		local nothing = true
+		for i=1,#activityIDs do
+			local activityName = C_LFGList.GetActivityInfoTable(activityID).fullName
+			if nothing then
+				nothing = false
+			else
+				concat_tb[#concat_tb+1] = '\n'
+			end
+			concat_tb[#concat_tb+1] = activityName
+		end
+	end
 	concat_tb[#concat_tb+1] = '\n|cff00ffff'
 	concat_tb[#concat_tb+1] = searchResultInfo.numMembers
 	concat_tb[#concat_tb+1] = "("

@@ -7,6 +7,7 @@ local UnitClassification = UnitClassification
 local IsInGroup = IsInGroup
 local GetNumQuestLogEntries = C_QuestLog.GetNumQuestLogEntries
 local GetInfo = C_QuestLog.GetInfo
+local C_LFGList = LookingForGroup.C_LFGList
 
 function LookingForGroup_Elite:OnInitialize()
 end
@@ -55,7 +56,13 @@ local function cofunc(npc_id,name,guid)
 		local categoryID = infotb.categoryID
 		local filters = infotb.filters
 		parameterstb.create = function()
-			C_LFGList.CreateListing(activityID,0.1,0,true,false)
+--			C_LFGList.CreateListing(activityID,0.1,0,true,false)
+			C_LFGList.CreateListing({
+				activityIDs = { activityID }, -- Wrap activityID in a table
+				requiredItemLevel = 0.1, -- Map to the second parameter of the old API
+				isAutoAccept = true -- Map to the fourth parameter of the old API
+				-- Fields for `false` or `0` are omitted, as they will default to `nil`
+			})
 		end
 		parameterstb.search = function()
 			C_LFGList.SetSearchToActivity(activityID)

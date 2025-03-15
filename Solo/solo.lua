@@ -1,6 +1,7 @@
 local LookingForGroup = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup")
 local LookingForGroup_Options = LibStub("AceAddon-3.0"):GetAddon("LookingForGroup_Options")
 local L = LibStub("AceLocale-3.0"):GetLocale("LookingForGroup")
+local C_LFGList = LookingForGroup.C_LFGList
 
 function LookingForGroup_Options.hardware_solo_create(instance_leave)
 	if LookingForGroup.db.profile.hardware then
@@ -22,7 +23,12 @@ function LookingForGroup_Options.hardware_solo_create(instance_leave)
 	else
 		C_LFGList.SetEntryTitle(16,0)
 	end
-	C_LFGList.CreateListing(457,GetAverageItemLevel()-10,0,false,true)
+	C_LFGList.CreateListing(
+	{
+		activityIDs = {457},
+		requiredItemLevel = GetAverageItemLevel()-10,
+		isPrivateGroup = true
+	})
 	coroutine.wrap(LookingForGroup_Options.req_main)(1)
 	if instance_leave then
 		C_Timer.After(1,function()
