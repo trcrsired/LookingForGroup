@@ -122,6 +122,12 @@ function Hook:QueueStatusEntry_SetUpLFGListApplication(entry,resultID)
 	concat_tb[#concat_tb+1] = "/"
 	concat_tb[#concat_tb+1] = member_counts.DAMAGER + member_counts.NOROLE
 	concat_tb[#concat_tb+1] = ")|r"
+	local partyGUID = searchResultInfo.partyGUID
+	if partyGUID then
+		concat_tb[#concat_tb+1] = "\n|cff8080cc"
+		concat_tb[#concat_tb+1] = partyGUID
+		concat_tb[#concat_tb+1] ="|r"
+	end
 	QueueStatusEntry_SetMinimalDisplay(entry,searchResultInfo.name,QUEUE_STATUS_SIGNED_UP,table.concat(concat_tb))
 end
 
@@ -138,6 +144,12 @@ function Hook:QueueStatusEntry_SetUpLFGListActiveEntry(entry)
 			concat_tb[#concat_tb+1] = activityName
 			concat_tb[#concat_tb+1] ="|r\n"	
 		end
+	end
+	local partyGUID = activeEntryInfo.partyGUID
+	if partyGUID then
+		concat_tb[#concat_tb+1] = "|cff8080cc"
+		concat_tb[#concat_tb+1] = partyGUID
+		concat_tb[#concat_tb+1] ="|r\n"
 	end
 	local numApplicants,numActiveApplicants = C_LFGList.GetNumApplicants()
 	concat_tb[#concat_tb+1] = LFG_LIST_PENDING_APPLICANTS:format(numActiveApplicants)
