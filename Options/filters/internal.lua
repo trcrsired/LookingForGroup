@@ -224,9 +224,6 @@ LookingForGroup_Options.RegisterSimpleFilter("find",function(info)
 			return 1
 		end
 		for i=1,#leader_rating_info do
-			for k,v in paris(leader_rating_info[i]) do
-				print(k,v)
-			end
 			local rating = leader_rating_info[i].rating
 			if rating and rating >= 1000 then
 				return 1
