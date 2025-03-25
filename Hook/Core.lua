@@ -4,12 +4,16 @@ local Hook = LookingForGroup:NewModule("Hook","AceHook-3.0")
 local getActivityIDsInTable = LookingForGroup.getActivityIDsInTable
 
 function Hook:OnInitialize()
-	if WOW_PROJECT_ID == 1 or WOW_PROJECT_ID >= 11 then
+	if WOW_PROJECT_ID == 1 or LE_EXPANSION_LEVEL_CURRENT >= 6 then
 	if QuestObjectiveSetupBlockButton_FindGroup then
 		self:SecureHook("QuestObjectiveSetupBlockButton_FindGroup")
 	end
 	if QuestObjectiveReleaseBlockButton_FindGroup then
 		self:SecureHook("QuestObjectiveReleaseBlockButton_FindGroup")
+	end
+
+	if LFGListUtil_FindQuestGroup then
+		self:RawHook("LFGListUtil_FindQuestGroup",true)
 	end
 	local disable_pve_frame = LookingForGroup.disable_pve_frame
 	if disable_pve_frame == nop then
@@ -275,5 +279,11 @@ function Hook:QuestObjectiveReleaseBlockButton_FindGroup(block)
 	if lfg_button then
 		self.quest_objective_pool:Release(lfg_button)
 		block.lfg_button = nil
+	end
+end
+
+function Hook:LFGListUtil_FindQuestGroup(questID, isFromGreenEyeButton)
+	if not LookingForGroup:loadevent("LookingForGroup_Q","LFG_SECURE_QUEST_ACCEPTED",questID,isFromGreenEyeButton) then
+		LookingForGroup:Print("LookingForGroup_Q failed to load")
 	end
 end
